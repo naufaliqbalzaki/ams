@@ -1,7 +1,9 @@
 <?php
 $host = "db";
-$username = "matt";
-$password = "password";
+// $username = "matt";
+$username = "root";
+// $password = "password";
+$username = "";
 $database = "ams_native";
 $config = mysqli_connect($host, $username, $password, $database);
 
