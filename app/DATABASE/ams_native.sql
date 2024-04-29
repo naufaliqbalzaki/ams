@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.4.12
--- http://www.phpmyadmin.net
+-- version 4.8.4
+-- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: 06 Apr 2018 pada 07.15
--- Versi Server: 5.6.25
--- PHP Version: 5.6.11
+-- Host: localhost
+-- Generation Time: Apr 17, 2024 at 03:29 PM
+-- Server version: 10.1.37-MariaDB
+-- PHP Version: 5.6.40
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -23,10 +25,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tbl_disposisi`
+-- Table structure for table `tbl_disposisi`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_disposisi` (
+CREATE TABLE `tbl_disposisi` (
   `id_disposisi` int(10) NOT NULL,
   `tujuan` varchar(250) NOT NULL,
   `isi_disposisi` mediumtext NOT NULL,
@@ -35,10 +37,10 @@ CREATE TABLE IF NOT EXISTS `tbl_disposisi` (
   `catatan` varchar(250) NOT NULL,
   `id_surat` int(10) NOT NULL,
   `id_user` tinyint(2) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `tbl_disposisi`
+-- Dumping data for table `tbl_disposisi`
 --
 
 INSERT INTO `tbl_disposisi` (`id_disposisi`, `tujuan`, `isi_disposisi`, `sifat`, `batas_waktu`, `catatan`, `id_surat`, `id_user`) VALUES
@@ -48,10 +50,10 @@ INSERT INTO `tbl_disposisi` (`id_disposisi`, `tujuan`, `isi_disposisi`, `sifat`,
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tbl_instansi`
+-- Table structure for table `tbl_instansi`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_instansi` (
+CREATE TABLE `tbl_instansi` (
   `id_instansi` tinyint(1) NOT NULL,
   `institusi` varchar(150) NOT NULL,
   `nama` varchar(150) NOT NULL,
@@ -66,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `tbl_instansi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `tbl_instansi`
+-- Dumping data for table `tbl_instansi`
 --
 
 INSERT INTO `tbl_instansi` (`id_instansi`, `institusi`, `nama`, `status`, `alamat`, `kepsek`, `nip`, `website`, `email`, `logo`, `id_user`) VALUES
@@ -75,19 +77,19 @@ INSERT INTO `tbl_instansi` (`id_instansi`, `institusi`, `nama`, `status`, `alama
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tbl_klasifikasi`
+-- Table structure for table `tbl_klasifikasi`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_klasifikasi` (
+CREATE TABLE `tbl_klasifikasi` (
   `id_klasifikasi` int(5) NOT NULL,
   `kode` varchar(30) NOT NULL,
   `nama` varchar(250) NOT NULL,
   `uraian` mediumtext NOT NULL,
   `id_user` tinyint(2) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `tbl_klasifikasi`
+-- Dumping data for table `tbl_klasifikasi`
 --
 
 INSERT INTO `tbl_klasifikasi` (`id_klasifikasi`, `kode`, `nama`, `uraian`, `id_user`) VALUES
@@ -139,15 +141,20 @@ INSERT INTO `tbl_klasifikasi` (`id_klasifikasi`, `kode`, `nama`, `uraian`, `id_u
 (46, '426.4', 'KONI', 'KONI', 1),
 (47, '427', 'Kepramukaan Meliputi: Organisasi dan Kegiatan Remaja', 'Kepramukaan Meliputi: Organisasi dan Kegiatan Remaja', 1),
 (48, '428', 'Kepramukaan', 'Kepramukaan', 1),
-(49, '429', 'Pendidikan Kedinasan Untuk Depdagri', 'Pendidikan Kedinasan Untuk Depdagri', 1);
+(49, '429', 'Pendidikan Kedinasan Untuk Depdagri', 'Pendidikan Kedinasan Untuk Depdagri', 1),
+(50, '1', '001/PPH/VI/2016', 'Pondok Pesantren Hidayatullah Nganjuk', 1),
+(51, '2', '074 / BAZNAZ.JTM / IV / 2016', 'Badan Amil Zakat Nasional Provinsi Jawa Timur', 1),
+(52, '3', '3 / XI/M.BIG/2016', 'Musyawarah Guru Mata Pelajaran Bahasa Inggris', 1),
+(53, '4', '560/402.1/411.203/2016', 'Dinas Sosial Tenaga Kerja Dan Transmigrasi Daerah Kabupaten Nganjuk', 1),
+(54, '12345', '54321', 'aaaaa', 1);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tbl_sett`
+-- Table structure for table `tbl_sett`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_sett` (
+CREATE TABLE `tbl_sett` (
   `id_sett` tinyint(1) NOT NULL,
   `surat_masuk` tinyint(2) NOT NULL,
   `surat_keluar` tinyint(2) NOT NULL,
@@ -156,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `tbl_sett` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `tbl_sett`
+-- Dumping data for table `tbl_sett`
 --
 
 INSERT INTO `tbl_sett` (`id_sett`, `surat_masuk`, `surat_keluar`, `referensi`, `id_user`) VALUES
@@ -165,10 +172,10 @@ INSERT INTO `tbl_sett` (`id_sett`, `surat_masuk`, `surat_keluar`, `referensi`, `
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tbl_surat_keluar`
+-- Table structure for table `tbl_surat_keluar`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_surat_keluar` (
+CREATE TABLE `tbl_surat_keluar` (
   `id_surat` int(10) NOT NULL,
   `no_agenda` int(10) NOT NULL,
   `tujuan` varchar(250) NOT NULL,
@@ -180,10 +187,10 @@ CREATE TABLE IF NOT EXISTS `tbl_surat_keluar` (
   `file` varchar(250) NOT NULL,
   `keterangan` varchar(250) NOT NULL,
   `id_user` tinyint(2) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `tbl_surat_keluar`
+-- Dumping data for table `tbl_surat_keluar`
 --
 
 INSERT INTO `tbl_surat_keluar` (`id_surat`, `no_agenda`, `tujuan`, `no_surat`, `isi`, `kode`, `tgl_surat`, `tgl_catat`, `file`, `keterangan`, `id_user`) VALUES
@@ -195,10 +202,10 @@ INSERT INTO `tbl_surat_keluar` (`id_surat`, `no_agenda`, `tujuan`, `no_surat`, `
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tbl_surat_masuk`
+-- Table structure for table `tbl_surat_masuk`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_surat_masuk` (
+CREATE TABLE `tbl_surat_masuk` (
   `id_surat` int(10) NOT NULL,
   `no_agenda` int(10) NOT NULL,
   `no_surat` varchar(50) NOT NULL,
@@ -211,42 +218,39 @@ CREATE TABLE IF NOT EXISTS `tbl_surat_masuk` (
   `file` varchar(250) NOT NULL,
   `keterangan` varchar(250) NOT NULL,
   `id_user` tinyint(2) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `tbl_surat_masuk`
+-- Dumping data for table `tbl_surat_masuk`
 --
 
 INSERT INTO `tbl_surat_masuk` (`id_surat`, `no_agenda`, `no_surat`, `asal_surat`, `isi`, `kode`, `indeks`, `tgl_surat`, `tgl_diterima`, `file`, `keterangan`, `id_user`) VALUES
-(11, 1, '001/PPH/VI/2016', 'Pondok Pesantren Hidayatullah Nganjuk', 'Permohonan Zakat Fitrah', '421.7', 'A.1', '2016-06-09', '2016-07-24', '601-surat masuk 1.jpg', 'Penting', 5),
-(12, 2, '074 / BAZNAZ.JTM / IV / 2016', 'Badan Amil Zakat Nasional Provinsi Jawa Timur', 'Pencairan Dana Bantuan Sebesar Rp. 800.000,- (Delapan Ratus Ribu Rupiah) dari Baznaz.', '422.4', 'A.2', '2016-04-07', '2016-07-24', '7523-surat masuk 2.jpg', 'Penting', 5),
-(13, 3, '3 / XI/M.BIG/2016', 'Musyawarah Guru Mata Pelajaran Bahasa Inggris', 'Surat edaran pertemuan rutin musyawarah guru mata pelajaran bahasa inggris.', '420', 'A.3', '2016-04-19', '2016-07-24', '', '-', 5),
-(14, 4, '560/402.1/411.203/2016', 'Dinas Sosial Tenaga Kerja Dan Transmigrasi Daerah Kabupaten Nganjuk', 'Surat undangan untuk menghadiri acara Pameran Bursa Kerja Untuk Percepatan Penempatan Tenaga Kerja / Job Fair Tahun 2016', '421', 'A.2', '2016-05-12', '2016-07-24', '', 'Segera laksanakan', 5),
-(16, 12345, '54321', 'aaaaa', 'bbbbbbbbbbb', '1234', 'ddddd', '2018-04-06', '2018-04-06', '3813-1504324775-jurusan.jpg', 'nnnnnnnnnnnnnnnn', 1);
+(1, 20, '2', 'asal surat 1', 'isi 1', 'kode 1', 'indeks 1', '2020-01-01', '2020-01-02', 'file_1.jpg', 'ket 1', 1),
+(2, 30, '1', 'asal surat 2', 'isi 2', 'kode 2', 'indeks 2', '2020-01-02', '2020-01-03', 'file_2.jpg', 'ket 2', 1),
+(3, 40, '1', 'asal surat 3', 'isi 3', 'kode 3', 'indeks 3', '2020-01-03', '2020-01-04', 'file_3.jpg', 'ket 3', 1);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tbl_user`
+-- Table structure for table `tbl_user`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_user` (
+CREATE TABLE `tbl_user` (
   `id_user` tinyint(2) NOT NULL,
   `username` varchar(30) NOT NULL,
   `password` varchar(35) NOT NULL,
   `nama` varchar(50) NOT NULL,
   `nip` varchar(25) NOT NULL,
   `admin` tinyint(1) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `tbl_user`
+-- Dumping data for table `tbl_user`
 --
 
 INSERT INTO `tbl_user` (`id_user`, `username`, `password`, `nama`, `nip`, `admin`) VALUES
 (1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'M. Rudi', '1234567', 1),
 (2, 'disposisi', '13bb8b589473803f26a02e338f949b8c', 'Petugas Disposisi', '-', 3);
- 
 
 --
 -- Indexes for dumped tables
@@ -302,27 +306,33 @@ ALTER TABLE `tbl_user`
 -- AUTO_INCREMENT for table `tbl_disposisi`
 --
 ALTER TABLE `tbl_disposisi`
-  MODIFY `id_disposisi` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `id_disposisi` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `tbl_klasifikasi`
 --
 ALTER TABLE `tbl_klasifikasi`
-  MODIFY `id_klasifikasi` int(5) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=50;
+  MODIFY `id_klasifikasi` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+
 --
 -- AUTO_INCREMENT for table `tbl_surat_keluar`
 --
 ALTER TABLE `tbl_surat_keluar`
-  MODIFY `id_surat` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+  MODIFY `id_surat` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
 --
 -- AUTO_INCREMENT for table `tbl_surat_masuk`
 --
 ALTER TABLE `tbl_surat_masuk`
-  MODIFY `id_surat` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
+  MODIFY `id_surat` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `tbl_user`
 --
 ALTER TABLE `tbl_user`
-  MODIFY `id_user` tinyint(2) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `id_user` tinyint(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
