@@ -7,9 +7,8 @@
     "dev:js": "vite",
     "build": "tsc && vite build",
     "prepare": "husky",
-    "lint": "eslint --fix .",
-    "format": "prettier 'resources/{js,jsx}/**/*.{js,jsx}' --write",
-    "pre-commit": "bun run format && lint-staged && pretty-quick --staged"
+    "format": "prettier 'resources/js/**/*.{js,jsx,ts,tsx}' --write",
+    "pre-commit": "bun run format && pretty-quick --staged"
   },
   "devDependencies": {
     "@headlessui/react": "^1.4.2",
@@ -22,14 +21,8 @@
     "autoprefixer": "^10.4.12",
     "axios": "^1.6.4",
     "concurrently": "^8.2.2",
-    "eslint": "^9.2.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.1.3",
-    "eslint-plugin-react": "^7.34.1",
-    "eslint-plugin-react-hooks": "^4.6.2",
     "husky": "^9.0.11",
     "laravel-vite-plugin": "^1.0",
-    "lint-staged": "^15.2.2",
     "postcss": "^8.4.31",
     "prettier": "^3.2.5",
     "pretty-quick": "^4.0.0",
@@ -47,6 +40,8 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "lint-staged": {
-    "*.js": "eslint --cache --fix"
+    "*.{ts,tsx}": [
+      "prettier --write"
+    ]
   }
 }
