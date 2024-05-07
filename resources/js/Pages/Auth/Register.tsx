@@ -1,15 +1,25 @@
-import { useEffect, FormEventHandler } from 'react'
-import GuestLayout from '@/Layouts/GuestLayout'
 import InputError from '@/Components/InputError'
-import InputLabel from '@/Components/InputLabel'
-import PrimaryButton from '@/Components/PrimaryButton'
-import TextInput from '@/Components/TextInput'
+import { Button } from '@/Components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/Components/ui/card'
+import { Input } from '@/Components/ui/input'
+import { Label } from '@/Components/ui/label'
+import { Separator } from '@/Components/ui/separator'
+import GuestLayout from '@/Layouts/GuestLayout'
 import { Head, Link, useForm } from '@inertiajs/react'
+import { FormEventHandler, useEffect } from 'react'
+import { toast } from 'sonner'
 
 export default function Register() {
   const { data, setData, post, processing, errors, reset } = useForm({
     name: '',
-    email: '',
+    username: '',
+    nip: '',
     password: '',
     password_confirmation: ''
   })
@@ -23,95 +33,166 @@ export default function Register() {
   const submit: FormEventHandler = (e) => {
     e.preventDefault()
 
-    post(route('register'))
+    post(route('register'), {
+      onBefore: () => {
+        toast.dismiss()
+        toast.loading('Processing...')
+      },
+      onError: (error) => {
+        console.error(error)
+        toast.dismiss()
+        if (error.name) {
+          toast.error(error.name)
+        }
+        if (error.username) {
+          toast.error(error.username)
+        }
+        if (error.nip) {
+          toast.error(error.nip)
+        }
+        if (error.password) {
+          toast.error(error.password)
+        }
+        if (error.password_confirmation) {
+          toast.error(error.password_confirmation)
+        }
+      },
+      onSuccess: () => {
+        toast.dismiss()
+        toast.success('Account registered.')
+      }
+    })
   }
 
   return (
     <GuestLayout>
       <Head title="Register" />
-
-      <form onSubmit={submit}>
-        <div>
-          <InputLabel htmlFor="name" value="Name" />
-
-          <TextInput
-            id="name"
-            name="name"
-            value={data.name}
-            className="mt-1 block w-full"
-            autoComplete="name"
-            isFocused={true}
-            onChange={(e) => setData('name', e.target.value)}
-            required
-          />
-
-          <InputError message={errors.name} className="mt-2" />
-        </div>
-
-        <div className="mt-4">
-          <InputLabel htmlFor="email" value="Email" />
-
-          <TextInput
-            id="email"
-            type="email"
-            name="email"
-            value={data.email}
-            className="mt-1 block w-full"
-            autoComplete="username"
-            onChange={(e) => setData('email', e.target.value)}
-            required
-          />
-
-          <InputError message={errors.email} className="mt-2" />
-        </div>
-
-        <div className="mt-4">
-          <InputLabel htmlFor="password" value="Password" />
-
-          <TextInput
-            id="password"
-            type="password"
-            name="password"
-            value={data.password}
-            className="mt-1 block w-full"
-            autoComplete="new-password"
-            onChange={(e) => setData('password', e.target.value)}
-            required
-          />
-
-          <InputError message={errors.password} className="mt-2" />
-        </div>
-
-        <div className="mt-4">
-          <InputLabel htmlFor="password_confirmation" value="Confirm Password" />
-
-          <TextInput
-            id="password_confirmation"
-            type="password"
-            name="password_confirmation"
-            value={data.password_confirmation}
-            className="mt-1 block w-full"
-            autoComplete="new-password"
-            onChange={(e) => setData('password_confirmation', e.target.value)}
-            required
-          />
-
-          <InputError message={errors.password_confirmation} className="mt-2" />
-        </div>
-
-        <div className="flex items-center justify-end mt-4">
-          <Link
-            href={route('login')}
-            className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Already registered?
-          </Link>
-
-          <PrimaryButton className="ms-4" disabled={processing}>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">
             Register
-          </PrimaryButton>
-        </div>
-      </form>
+          </CardTitle>
+          <CardDescription>
+            Please provide the following information to register.
+          </CardDescription>
+        </CardHeader>
+        <Separator className="mb-4" />
+        <CardContent>
+          <form onSubmit={submit}>
+            <div>
+              <Label htmlFor="name">Name</Label>
+
+              <Input
+                id="name"
+                name="name"
+                value={data.name}
+                className="block w-full mt-1"
+                autoComplete="name"
+                onChange={(e) => setData('name', e.target.value)}
+                required
+              />
+
+              <InputError message={errors.name} className="mt-2" />
+            </div>
+
+            <div className="mt-4">
+              <Label htmlFor="username">Username</Label>
+
+              <Input
+                id="username"
+                type="text"
+                name="username"
+                value={data.username}
+                className="block w-full mt-1"
+                autoComplete="additional-name"
+                onChange={(e) => setData('username', e.target.value)}
+                required
+              />
+
+              <InputError
+                message={errors.username}
+                className="mt-2"
+              />
+            </div>
+
+            <div className="mt-4">
+              <Label htmlFor="nip">NIP</Label>
+
+              <Input
+                id="nip"
+                type="text"
+                name="nip"
+                value={data.nip}
+                className="block w-full mt-1"
+                autoComplete="additional-name"
+                onChange={(e) => setData('nip', e.target.value)}
+                required
+              />
+
+              <InputError message={errors.nip} className="mt-2" />
+            </div>
+
+            <div className="mt-4">
+              <Label htmlFor="password">Password</Label>
+
+              <Input
+                id="password"
+                type="password"
+                name="password"
+                value={data.password}
+                className="block w-full mt-1"
+                autoComplete="new-password"
+                onChange={(e) => setData('password', e.target.value)}
+                required
+              />
+
+              <InputError
+                message={errors.password}
+                className="mt-2"
+              />
+            </div>
+
+            <div className="mt-4">
+              <Label htmlFor="password_confirmation">
+                Confirm Password
+              </Label>
+
+              <Input
+                id="password_confirmation"
+                type="password"
+                name="password_confirmation"
+                value={data.password_confirmation}
+                className="block w-full mt-1"
+                autoComplete="new-password"
+                onChange={(e) =>
+                  setData('password_confirmation', e.target.value)
+                }
+                required
+              />
+
+              <InputError
+                message={errors.password_confirmation}
+                className="mt-2"
+              />
+            </div>
+
+            <div className="flex items-center justify-end mt-4">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Already have an account?{' '}
+                <Link
+                  href={route('login')}
+                  className="text-sm text-blue-600 underline "
+                >
+                  Log in
+                </Link>
+              </p>
+            </div>
+            <Button className="w-full mt-4" disabled={processing}>
+              Log in
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </GuestLayout>
   )
 }

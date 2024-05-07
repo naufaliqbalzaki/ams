@@ -13,7 +13,7 @@ return new class extends Migration {
     Schema::create('users', function (Blueprint $table) {
       $table->id();
       $table->string('name');
-      $table->string('user_name')->unique();
+      $table->string('username')->unique();
       $table->string('nip')->unique();
       $table->string('password');
       $table->enum('role', ['admin', 'user'])->default('user');
@@ -22,7 +22,7 @@ return new class extends Migration {
     });
 
     Schema::create('password_reset_tokens', function (Blueprint $table) {
-      $table->string('user_name')->primary();
+      $table->string('username')->primary();
       $table->string('token');
       $table->timestamp('created_at')->nullable();
     });
