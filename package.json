@@ -5,14 +5,14 @@
     "dev": "concurrently -n php,js -c blue,yellow \"bun run dev:php\" \"bun run dev:js\"",
     "dev:php": "php artisan serve",
     "dev:js": "vite",
+    "format": "prettier --write .",
     "build": "tsc && vite build",
-    "prepare": "husky",
-    "format": "prettier 'resources/js/**/*.{js,jsx,ts,tsx}' --write",
-    "pre-commit": "bun run format && pretty-quick --staged"
+    "prepare": "husky"
   },
   "devDependencies": {
     "@headlessui/react": "^1.4.2",
     "@inertiajs/react": "^1.0.0",
+    "@prettier/plugin-php": "^0.22.2",
     "@tailwindcss/forms": "^0.5.3",
     "@types/node": "^18.13.0",
     "@types/react": "^18.0.28",
@@ -25,7 +25,6 @@
     "laravel-vite-plugin": "^1.0",
     "postcss": "^8.4.31",
     "prettier": "^3.2.5",
-    "pretty-quick": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwindcss": "^3.2.1",
@@ -38,10 +37,5 @@
     "clsx": "^2.1.1",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7"
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "prettier --write"
-    ]
   }
 }
