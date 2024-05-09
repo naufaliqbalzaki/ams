@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Instance extends Model
 {
@@ -17,6 +18,11 @@ class Instance extends Model
     'website',
     'email',
     'image',
+    'address',
+    'district',
+    'city',
+    'province',
+    'postal_code'
   ];
 
   public function parent()
@@ -29,11 +35,6 @@ class Instance extends Model
     return $this->hasMany(Instance::class);
   }
 
-  public function addresses()
-  {
-    return $this->hasMany(InstanceAddress::class);
-  }
-
   public function users()
   {
     return $this->hasMany(User::class);
@@ -44,11 +45,6 @@ class Instance extends Model
     return $this->hasMany(Document::class);
   }
 
-  public function address()
-  {
-    return $this->hasOne(InstanceAddress::class);
-  }
-
   public function instance()
   {
     return $this->belongsTo(Instance::class);
@@ -57,5 +53,12 @@ class Instance extends Model
   public function instances()
   {
     return $this->hasMany(Instance::class);
+  }
+
+  public function deleteImage()
+  {
+    if ($this->image) {
+      Storage::delete('public/instances/' . $this->image);
+    }
   }
 }

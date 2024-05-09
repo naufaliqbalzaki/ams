@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreInstanceRequest;
 use App\Http\Requests\UpdateInstanceRequest;
 use App\Models\Instance;
+use Inertia\Inertia;
 
 class InstanceController extends Controller
 {
@@ -13,7 +14,9 @@ class InstanceController extends Controller
    */
   public function index()
   {
-    //
+    return Inertia::render('Instances/Index', [
+      'instances' =>  Instance::latest()->get(),
+    ]);
   }
 
   /**
@@ -21,7 +24,7 @@ class InstanceController extends Controller
    */
   public function create()
   {
-    //
+    return Inertia::render('Instances/Create');
   }
 
   /**
@@ -29,7 +32,18 @@ class InstanceController extends Controller
    */
   public function store(StoreInstanceRequest $request)
   {
-    //
+    $valid = $request->validated();
+
+    if ($request->hasFile('image')) {
+      $res = $request->image->store('public/instances');
+      $image = explode('/', $res);
+      $valid['image'] =  $image[2];
+    }
+
+    Instance::create($valid);
+
+    session()->flash('success', 'Instance created successfully');
+    return redirect()->route('instances.index');
   }
 
   /**
@@ -45,7 +59,9 @@ class InstanceController extends Controller
    */
   public function edit(Instance $instance)
   {
-    //
+    return Inertia::render('Instances/Edit', [
+      'instance' => $instance,
+    ]);
   }
 
   /**
@@ -53,7 +69,21 @@ class InstanceController extends Controller
    */
   public function update(UpdateInstanceRequest $request, Instance $instance)
   {
-    //
+
+
+    $valid = $request->all();
+
+    if ($request->hasFile('image')) {
+      $instance->deleteImage();
+      $res = $request->image->store('public/instances');
+      $image = explode('/', $res);
+      $valid['image'] =  $image[2];
+    }
+
+    $instance->update($valid);
+
+    session()->flash('success', 'Instance updated successfully');
+    return redirect()->route('instances.index');
   }
 
   /**
@@ -61,6 +91,14 @@ class InstanceController extends Controller
    */
   public function destroy(Instance $instance)
   {
-    //
+    $instance->deleteImage();
+
+    $res = $instance->delete();
+    if ($res) {
+      session()->flash('success', 'Instance deleted successfully');
+    } else {
+      session()->flash('error', 'Instance deletion failed');
+    }
+    return redirect()->route('instances.index');
   }
 }

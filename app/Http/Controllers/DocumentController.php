@@ -5,17 +5,24 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreDocumentRequest;
 use App\Http\Requests\UpdateDocumentRequest;
 use App\Models\Document;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
+use PhpParser\Comment\Doc;
 
 class DocumentController extends Controller
 {
   /**
    * Display a listing of the resource.
    */
-  public function index()
+  public function index(Request $request)
   {
-    return Inertia::render('Dashboard', [
-      'incoming_doc_count' => Document::where('type', 'incoming')->count(),
+    $path = explode('/', $request->path());
+    $doc_type = $path[1];
+    $documents = Document::where('doc_type', $doc_type)->get();
+
+    return Inertia::render('Documents/Index', [
+      'documents' => $documents,
+      'doc_type' => $doc_type,
     ]);
   }
 

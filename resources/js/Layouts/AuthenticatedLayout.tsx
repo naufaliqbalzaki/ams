@@ -2,8 +2,16 @@ import ApplicationLogo from '@/Components/ApplicationLogo'
 import Dropdown from '@/Components/Dropdown'
 import NavLink from '@/Components/NavLink'
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/Components/ui/dropdown-menu'
+import { cn } from '@/lib/utils'
 import { User } from '@/types'
 import { Link } from '@inertiajs/react'
+import { ChevronRightIcon } from '@radix-ui/react-icons'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 
 export default function Authenticated({
@@ -12,6 +20,9 @@ export default function Authenticated({
   children
 }: PropsWithChildren<{ user: User; header?: ReactNode }>) {
   const [showingNavigationDropdown, setShowingNavigationDropdown] =
+    useState(false)
+
+  const [showInstacesDropdown, setShowInstancesDropdown] =
     useState(false)
 
   return (
@@ -33,6 +44,57 @@ export default function Authenticated({
                 >
                   Dashboard
                 </NavLink>
+                <NavLink
+                  href={route('instances.index')}
+                  active={route().current('instances.index')}
+                >
+                  Instances
+                </NavLink>
+                <DropdownMenu onOpenChange={setShowInstancesDropdown}>
+                  <DropdownMenuTrigger
+                    asChild
+                    className="flex items-center"
+                  >
+                    <button>
+                      <NavLink
+                        href="#"
+                        active={route().current('documents.*')}
+                      >
+                        Documents
+                      </NavLink>
+                      <ChevronRightIcon
+                        className={cn(
+                          'transition-all duration-300',
+                          showInstacesDropdown && 'rotate-90'
+                        )}
+                      />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem>
+                      <NavLink
+                        href={route('documents.index', ['central'])}
+                        active={route().current('documents.index', [
+                          'central'
+                        ])}
+                        className="w-full"
+                      >
+                        Central
+                      </NavLink>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <NavLink
+                        href={route('documents.index', ['east'])}
+                        active={route().current('documents.index', [
+                          'east'
+                        ])}
+                        className="w-full"
+                      >
+                        East
+                      </NavLink>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
 
@@ -134,6 +196,12 @@ export default function Authenticated({
               active={route().current('dashboard')}
             >
               Dashboard
+            </ResponsiveNavLink>
+            <ResponsiveNavLink
+              href={route('instances.index')}
+              active={route().current('instances.index')}
+            >
+              Instances
             </ResponsiveNavLink>
           </div>
 
