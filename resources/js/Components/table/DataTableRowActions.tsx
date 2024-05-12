@@ -17,7 +17,7 @@ import {
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
-  name: string
+  name: 'documents' | 'instances'
 }
 
 export function DataTableRowActions({

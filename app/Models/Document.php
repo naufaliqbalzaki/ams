@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Document extends Model
 {
@@ -15,7 +16,8 @@ class Document extends Model
     'doc_type',
     'type',
     'number',
-    'date',
+    'issue_date',
+    'verification_date',
     'subject',
     'from',
     'to',
@@ -36,5 +38,10 @@ class Document extends Model
     return $this->belongsTo(Instance::class);
   }
 
-
+  public function deleteFile()
+  {
+    if ($this->file) {
+      Storage::delete('public/documents/' . $this->file);
+    }
+  }
 }

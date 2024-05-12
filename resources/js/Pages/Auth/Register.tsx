@@ -188,7 +188,7 @@ export default function Register() {
               </p>
             </div>
             <Button className="w-full mt-4" disabled={processing}>
-              Log in
+              Register
             </Button>
           </form>
         </CardContent>

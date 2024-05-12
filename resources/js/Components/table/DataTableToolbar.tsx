@@ -7,10 +7,14 @@ import { DataTableViewOptions } from './DataTableViewOptions'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
+  name: 'documents' | 'instances'
+  doc_type?: 'central' | 'east'
 }
 
 export function DataTableToolbar<TData>({
-  table
+  table,
+  name,
+  doc_type
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
 
@@ -53,7 +57,11 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <DataTableViewOptions table={table} />
+      <DataTableViewOptions
+        table={table}
+        name={name}
+        doc_type={doc_type}
+      />
     </div>
   )
 }

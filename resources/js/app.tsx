@@ -3,7 +3,7 @@ import './bootstrap'
 
 import { createInertiaApp } from '@inertiajs/react'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
-import { hydrateRoot } from 'react-dom/client'
+import { createRoot } from 'react-dom/client'
 import { ThemeProvider } from './Components/ThemeProvider'
 import { Toaster } from './Components/ui/sonner'
 
@@ -17,22 +17,16 @@ createInertiaApp({
       import.meta.glob('./Pages/**/*.tsx')
     ),
   setup({ el, App, props }) {
-    hydrateRoot(
-      el,
+    const root = createRoot(el)
+
+    root.render(
       <ThemeProvider>
         <App {...props} />
         <Toaster richColors />
       </ThemeProvider>
     )
-
-    // root.render(
-    //   <ThemeProvider>
-    //     <App {...props} />
-    //     <Toaster richColors />
-    //   </ThemeProvider>
-    // )
   },
   progress: {
-    color: '#4B5563'
+    color: '#4F46E5'
   }
 })

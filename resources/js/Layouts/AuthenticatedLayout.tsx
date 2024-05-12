@@ -73,10 +73,12 @@ export default function Authenticated({
                   <DropdownMenuContent>
                     <DropdownMenuItem>
                       <NavLink
-                        href={route('documents.index', ['central'])}
-                        active={route().current('documents.index', [
-                          'central'
-                        ])}
+                        href={route('documents.index', {
+                          type: 'central'
+                        })}
+                        active={route().current('documents.index', {
+                          type: 'central'
+                        })}
                         className="w-full"
                       >
                         Central
@@ -84,10 +86,12 @@ export default function Authenticated({
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <NavLink
-                        href={route('documents.index', ['east'])}
-                        active={route().current('documents.index', [
-                          'east'
-                        ])}
+                        href={route('documents.index', {
+                          type: 'east'
+                        })}
+                        active={route().current('documents.index', {
+                          type: 'east'
+                        })}
                         className="w-full"
                       >
                         East

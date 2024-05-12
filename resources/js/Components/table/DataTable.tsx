@@ -22,17 +22,22 @@ import {
   TableHeader,
   TableRow
 } from '@/Components/ui/table'
+import { cn } from '@/lib/utils'
 import { DataTablePagination } from './DataTablePagination'
 import { DataTableToolbar } from './DataTableToolbar'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  name: 'documents' | 'instances'
+  doc_type?: 'central' | 'east'
 }
 
 export function DataTable<TData, TValue>({
   columns,
-  data
+  data,
+  name,
+  doc_type
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
@@ -65,7 +70,11 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
+      <DataTableToolbar
+        table={table}
+        name={name}
+        doc_type={doc_type}
+      />
       <div className="border rounded-md">
         <Table>
           <TableHeader>
@@ -97,7 +106,15 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className={cn(
+                        // if odd, add bg-gray-50
+                        parseInt(cell.row.id) % 2 === 0
+                          ? 'bg-background'
+                          : 'dark:bg-neutral-900 bg-neutral-100'
+                      )}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

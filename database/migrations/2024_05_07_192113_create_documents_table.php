@@ -16,17 +16,18 @@ return new class extends Migration
       $table->foreignId('user_id')->constrained()->cascadeOnDelete();
       $table->foreignId('instance_id')->constrained()->cascadeOnDelete();
       $table->enum('doc_type', ['central', 'east']);
-      $table->enum('type', ['incoming', 'outcoming']);
+      $table->enum('type', ['incoming', 'outgoing']);
       $table->string('number')->unique();
-      $table->date('date');
-      $table->text('subject');
-      $table->string('from');
-      $table->string('to');
-      $table->string('file');
-      $table->string('phone');
+      $table->datetime('issue_date')->nullable();
+      $table->datetime('verification_date')->nullable();
+      $table->text('subject')->nullable();
+      $table->string('from')->nullable();
+      $table->string('to')->nullable();
+      $table->string('file')->nullable();
+      $table->string('phone')->nullable();
       $table->mediumText('next_action')->nullable();
       $table->mediumText('corrective_action')->nullable();
-      $table->mediumText('descripion')->nullable();
+      $table->mediumText('description')->nullable();
       $table->timestamps();
     });
   }

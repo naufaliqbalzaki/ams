@@ -54,7 +54,7 @@ export const InstanceForm = ({
     }
   }
 
-  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setData('image', e.target.files[0])
       console.log(data.image)
@@ -157,7 +157,7 @@ export const InstanceForm = ({
             name="image"
             accept="image/png, image/jpeg, image/jpg"
             className="block mt-1 "
-            onChange={handleImageUpload}
+            onChange={handleImageChange}
           />
         </div>
         <InputError message={errors.image} className="mt-2" />

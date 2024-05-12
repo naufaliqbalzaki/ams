@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreDocumentRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class StoreDocumentRequest extends FormRequest
    */
   public function authorize(): bool
   {
-    return false;
+    return Auth::check();
   }
 
   /**
@@ -22,7 +23,24 @@ class StoreDocumentRequest extends FormRequest
   public function rules(): array
   {
     return [
-      //
+      'user_id' => ['required', 'integer'],
+      'instance_id' => ['required', 'string'],
+      'doc_type' => ['required', 'string'],
+      'type' => ['required', 'string'],
+      'number' => ['required', 'string', 'unique:documents'],
+      'issue_date' => ['required', 'date'],
+      'verification_date' => ['required', 'date'],
+      'subject' => ['required', 'string'],
+      'from' => ['required', 'string'],
+      'to' => ['required', 'string'],
+      'file' => [
+        'nullable',
+        'file',
+      ],
+      'phone' => ['required', 'string'],
+      'next_action' => ['required', 'string'],
+      'corrective_action' => ['required', 'string'],
+      'description' => ['required', 'string'],
     ];
   }
 }

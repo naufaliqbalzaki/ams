@@ -25,25 +25,27 @@ export type PageProps<
 export interface Document {
   id: number
   user_id: number
-  instance_id: number
+  instance_id: string
   doc_type: string
-  type: string
+  type: 'incoming' | 'outgoing'
   number: string
-  date: string
-  subject: string
+  issue_date: Date
+  verification_date: Date
   from: string
   to: string
-  file: string
+  subject: string
+  file: string | File
   phone: string
   next_action: string
   corrective_action: string
   description: string
   created_at: string
   updated_at: string
+  _method?: 'post' | 'put'
 }
 
 export type Instance = {
-  id: number | null
+  id: string | null
   parent_id: number | null
   name: string
   is_active: boolean
