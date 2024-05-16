@@ -50,13 +50,11 @@ export const DocumentForm = ({
       user_id: userId,
       instance_id: '',
       doc_type: docType,
-      type: 'incoming',
       number: '',
       issue_date: new Date(),
       verification_date: new Date(),
       subject: '',
       from: '',
-      to: '',
       file: new File([], 'file'),
       phone: '',
       next_action: '',
@@ -93,13 +91,13 @@ export const DocumentForm = ({
   return (
     <form onSubmit={submit}>
       <div>
-        <Label htmlFor="instance_id">Instance</Label>
+        <Label htmlFor="instance_id">Dinas</Label>
         <Select
           value={data.instance_id}
           onValueChange={(val) => setData('instance_id', val)}
         >
           <SelectTrigger className="mt-2">
-            <SelectValue placeholder="Select instance" />
+            <SelectValue placeholder="Pilih dinas" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
@@ -117,27 +115,8 @@ export const DocumentForm = ({
 
         <InputError message={errors.instance_id} className="mt-2" />
       </div>
-      <div>
-        <Label htmlFor="type">Type</Label>
-        <Select
-          value={data.type}
-          onValueChange={(val) => setData('type', val)}
-        >
-          <SelectTrigger className="mt-2">
-            <SelectValue placeholder="Select document type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="incoming">Incoming</SelectItem>
-              <SelectItem value="outgoing">Outgoing</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-
-        <InputError message={errors.type} className="mt-2" />
-      </div>
       <div className="mt-4">
-        <Label htmlFor="number">Number</Label>
+        <Label htmlFor="number">No.</Label>
         <Input
           id="number"
           type="text"
@@ -150,7 +129,7 @@ export const DocumentForm = ({
         <InputError message={errors.number} className="mt-2" />
       </div>
       <div className="flex items-center gap-4 mt-4">
-        <Label htmlFor="issue_date">Issue Date</Label>
+        <Label htmlFor="issue_date">Tanggal Terbit</Label>
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -170,7 +149,7 @@ export const DocumentForm = ({
                   minute: '2-digit'
                 })}`
               ) : (
-                <span>Pick a issue date</span>
+                <span>Pilih tanggal terbit</span>
               )}
             </Button>
           </PopoverTrigger>
@@ -209,7 +188,7 @@ export const DocumentForm = ({
         <InputError message={errors.issue_date} className="mt-2" />
       </div>
       <div className="flex items-center gap-4 mt-4">
-        <Label htmlFor="verification_date">Verification Date</Label>
+        <Label htmlFor="verification_date">Tanggal Verifikasi</Label>
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -229,7 +208,7 @@ export const DocumentForm = ({
                   minute: '2-digit'
                 })}`
               ) : (
-                <span>Pick a verification date</span>
+                <span>Pilih tanggal verifikasi</span>
               )}
             </Button>
           </PopoverTrigger>
@@ -271,7 +250,7 @@ export const DocumentForm = ({
         />
       </div>
       <div className="mt-4">
-        <Label htmlFor="from">From</Label>
+        <Label htmlFor="from">Pemohon</Label>
         <Input
           id="from"
           type="text"
@@ -284,20 +263,7 @@ export const DocumentForm = ({
         <InputError message={errors.from} className="mt-2" />
       </div>
       <div className="mt-4">
-        <Label htmlFor="to">To</Label>
-        <Input
-          id="to"
-          type="text"
-          name="to"
-          value={data.to}
-          className="block w-full mt-1"
-          onChange={(e) => setData('to', e.target.value)}
-        />
-
-        <InputError message={errors.to} className="mt-2" />
-      </div>
-      <div className="mt-4">
-        <Label htmlFor="subject">Subject</Label>
+        <Label htmlFor="subject">Perizinan</Label>
         <Textarea
           id="subject"
           name="subject"
@@ -309,7 +275,7 @@ export const DocumentForm = ({
         <InputError message={errors.subject} className="mt-2" />
       </div>
       <div className="mt-4">
-        <Label htmlFor="file">Attachment</Label>
+        <Label htmlFor="file">Lampiran</Label>
         <Input
           id="file"
           type="file"
@@ -322,7 +288,7 @@ export const DocumentForm = ({
         <InputError message={errors.file} className="mt-2" />
       </div>
       <div className="mt-4">
-        <Label htmlFor="phone">Phone</Label>
+        <Label htmlFor="phone">No. Telp</Label>
         <Input
           id="phone"
           type="text"
@@ -335,7 +301,7 @@ export const DocumentForm = ({
         <InputError message={errors.phone} className="mt-2" />
       </div>
       <div className="mt-4">
-        <Label htmlFor="next_action">Next Action</Label>
+        <Label htmlFor="next_action">Aksi Lanjutan</Label>
         <Textarea
           id="next_action"
           name="next_action"
@@ -347,7 +313,7 @@ export const DocumentForm = ({
         <InputError message={errors.next_action} className="mt-2" />
       </div>
       <div className="mt-4">
-        <Label htmlFor="corrective_action">Corrective Action</Label>
+        <Label htmlFor="corrective_action">Aksi Koreksi</Label>
         <Textarea
           id="corrective_action"
           name="corrective_action"
@@ -364,7 +330,7 @@ export const DocumentForm = ({
         />
       </div>
       <div className="mt-4">
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="description">Keterangan</Label>
         <Textarea
           id="description"
           name="description"
@@ -381,7 +347,7 @@ export const DocumentForm = ({
           className="w-full mt-2"
           disabled={processing}
         >
-          {document ? 'Update' : 'Create'}
+          {document ? 'Ubah' : 'Buat'}
         </Button>
       </div>
     </form>

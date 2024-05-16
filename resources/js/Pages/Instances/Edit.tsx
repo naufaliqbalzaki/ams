@@ -15,12 +15,12 @@ export default function EditInstancePage({
       header={
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-            Update {instance.name}
+            Ubah Dinas "{instance.name}"
           </h2>
         </div>
       }
     >
-      <Head title="New Instances" />
+      <Head title={`Ubah Dinas "${instance.name}"`} />
 
       <div className="px-8 mx-auto max-w-7xl">
         <InstanceForm instance={instance} appUrl={appUrl} />

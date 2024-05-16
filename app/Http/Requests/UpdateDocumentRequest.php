@@ -27,13 +27,11 @@ class UpdateDocumentRequest extends FormRequest
       'user_id' => ['required', 'integer'],
       'instance_id' => ['required', 'integer'],
       'doc_type' => ['required', 'string'],
-      'type' => ['required', 'string'],
       'number' => ['required', 'string'],
       'issue_date' => ['required', 'date'],
       'verification_date' => ['required', 'date'],
       'subject' => ['required', 'string'],
       'from' => ['required', 'string'],
-      'to' => ['required', 'string'],
       'file' => [
         'nullable',
         Rule::when(

@@ -43,7 +43,6 @@ function generateChart({ data }: { data: any }) {
   let groupedData: any = {}
   data.data.forEach((item: any) => {
     const dateOnly = item.created_at.split('T')[0]
-    console.log('ITEM :', dateOnly)
 
     if (!dates.includes(dateOnly)) {
       dates.push(dateOnly)
@@ -55,7 +54,7 @@ function generateChart({ data }: { data: any }) {
     groupedData[dateOnly].push(item)
   })
 
-  const test: ApexChartsProps = {
+  const chartData: ApexChartsProps = {
     type: 'area',
     series: [
       {
@@ -79,7 +78,6 @@ function generateChart({ data }: { data: any }) {
           show: false
         }
       },
-      // random color
       colors: randomColor(),
       dataLabels: {
         enabled: false
@@ -102,8 +100,8 @@ function generateChart({ data }: { data: any }) {
   return (
     <>
       <ReactApexChart
-        options={test.options}
-        series={test.series}
+        options={chartData.options}
+        series={chartData.series}
         type="area"
         height={200}
       />
@@ -129,7 +127,7 @@ export default function Dashboard({
       <Head title="Dashboard" />
 
       <div className="px-8 mx-auto max-w-7xl">
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2 transition-all duration-300 ease-in-out md:grid-cols-2">
           {keys.map((key) => (
             <Card key={key}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0">
@@ -143,7 +141,7 @@ export default function Dashboard({
                 <h3 className="font-semibold ">
                   {data[key].data.length}
                   <span className="ml-2 font-normal text-gray-500 ">
-                    {data[key].unit}s
+                    {data[key].unit}
                   </span>
                 </h3>
               </CardContent>

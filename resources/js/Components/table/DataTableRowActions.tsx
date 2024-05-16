@@ -1,7 +1,12 @@
-import { Pencil1Icon, TrashIcon } from '@radix-ui/react-icons'
+import {
+  EyeOpenIcon,
+  Pencil1Icon,
+  TrashIcon
+} from '@radix-ui/react-icons'
 import { Row } from '@tanstack/react-table'
 
-import { Button } from '@/Components/ui/button'
+import { Button, buttonVariants } from '@/Components/ui/button'
+import { cn } from '@/lib/utils'
 import { Link, router } from '@inertiajs/react'
 import {
   AlertDialog,
@@ -14,61 +19,284 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '../ui/alert-dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '../ui/dialog'
+import { Separator } from '../ui/separator'
+import { Table, TableBody, TableRow } from '../ui/table'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
   name: 'documents' | 'instances'
 }
 
+const EditDataLink = ({
+  name,
+  id,
+  showText
+}: {
+  name: string
+  id: string
+  showText: boolean
+}) => (
+  <Link href={`/${name}/${id}/edit`}>
+    <Button
+      className={cn(
+        'bg-blue-500 w-64',
+        !showText && 'bg-opacity-5 w-min'
+      )}
+      variant="ghost"
+      type="button"
+    >
+      <Pencil1Icon
+        className={cn('w-4 h-4', !showText && 'text-blue-500')}
+      />
+      {showText && <span className="ml-2">Ubah</span>}
+    </Button>
+  </Link>
+)
+
+const DeleteDataDialog = ({
+  id,
+  name,
+  showText
+}: {
+  id: string
+  name: string
+  showText?: boolean
+}) => (
+  <AlertDialog>
+    <AlertDialogTrigger asChild>
+      <Button
+        className={cn(
+          'bg-red-500 w-64',
+          !showText && 'bg-opacity-5 w-min'
+        )}
+        variant="ghost"
+      >
+        <TrashIcon
+          className={cn('w-4 h-4', !showText && 'text-red-500')}
+        />
+        {showText && <span className="ml-2">Hapus</span>}
+      </Button>
+    </AlertDialogTrigger>
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>
+          Apakah Anda yakin ingin menghapus data ini?
+        </AlertDialogTitle>
+        <AlertDialogDescription>
+          Data yang dihapus tidak dapat dikembalikan.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogAction
+          onClick={() =>
+            router.visit(`/${name}/${id}`, {
+              method: 'delete'
+            })
+          }
+          className={buttonVariants({ variant: 'destructive' })}
+        >
+          Hapus
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
+)
+
+const DocumentDetail = ({
+  name,
+  data
+}: {
+  name: string
+  data: any
+}) => (
+  <>
+    <TableRow className="flex items-center gap-2 p-2 hover:bg-inherit">
+      <p className="font-medium min-w-32">Nomor</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.number}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
+      <p className="font-medium min-w-32">Pemohon</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.from}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 hover:bg-inherit">
+      <p className="font-medium min-w-32">Dinas</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.instance_name}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
+      <p className="font-medium min-w-32">Lanjut</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.next_action}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 dark:bg-inherit">
+      <p className="font-medium min-w-32">Koreksi</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.corrective_action}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
+      <p className="font-medium min-w-32">Tanggal Terbit</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.issue_date}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 dark:bg-inherit">
+      <p className="font-medium min-w-32">Tanggal Verifikasi</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.verification_date}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
+      <p className="font-medium min-w-32">Keterangan</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.description}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 dark:bg-inherit">
+      <p className="font-medium min-w-32">No. Telepon</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.phone}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 mt-6 border-none justify-evenly dark:bg-inherit">
+      <DeleteDataDialog id={data.id} name={name} showText={true} />
+      <EditDataLink id={data.id} name={name} showText={true} />
+    </TableRow>
+  </>
+)
+
+const InstanceDetail = ({
+  data,
+  name
+}: {
+  data: any
+  name: string
+}) => (
+  <>
+    <TableRow className="flex items-center gap-2 p-2 hover:bg-inherit">
+      <p className="font-medium min-w-32">Nama</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.name}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
+      <p className="font-medium min-w-32">Aktif</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.is_active ? 'Ya' : 'Tidak'}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 dark:bg-inherit">
+      <p className="font-medium min-w-32">Email</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.email}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
+      <p className="font-medium min-w-32">Website</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.website}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 dark:bg-inherit">
+      <p className="font-medium min-w-32">Alamat</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.address}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
+      <p className="font-medium min-w-32">Kecamatan</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.district}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 dark:bg-inherit">
+      <p className="font-medium min-w-32">Kota</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.city}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
+      <p className="font-medium min-w-32">Provinsi</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.province}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 mt-6 border-none justify-evenly dark:bg-inherit">
+      <DeleteDataDialog id={data.id} name={name} showText={true} />
+      <EditDataLink id={data.id} name={name} showText={true} />
+    </TableRow>
+  </>
+)
+
 export function DataTableRowActions({
   row,
   name
 }: DataTableRowActionsProps<any>) {
+  const data = row.original
   return (
     <div className="flex items-center justify-center gap-2">
-      <Link href={`/${name}/${row.original.id}/edit`}>
-        <Button
-          className="bg-blue-500 bg-opacity-5 w-min"
-          variant="ghost"
-          type="button"
-        >
-          <Pencil1Icon className="w-4 h-4 text-blue-500" />
-        </Button>
-      </Link>
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
+      <Dialog>
+        <DialogTrigger asChild>
           <Button
-            className="bg-red-500 bg-opacity-5 w-min"
+            className="bg-green-500 bg-opacity-5 w-min"
             variant="ghost"
+            type="button"
           >
-            <TrashIcon className="w-4 h-4 text-red-500" />
+            <EyeOpenIcon className="w-4 h-4 text-green-500" />
           </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              Are you sure you want to delete this instance?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              Once your this instance with name{' '}
-              <strong>{row.original.name}</strong> is deleted, all of
-              its resources and data will be permanently deleted.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() =>
-                router.visit(`/${name}/${row.original.id}`, {
-                  method: 'delete'
-                })
-              }
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        </DialogTrigger>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>
+              Detail {name === 'instances' ? 'Dinas' : 'Surat'} "
+              {data.name || data.from}"
+            </DialogTitle>
+          </DialogHeader>
+          <Separator />
+          <Table className="space-y-2 ">
+            {name === 'documents' ? (
+              <TableBody>
+                <DocumentDetail data={data} name={name} />
+              </TableBody>
+            ) : (
+              <InstanceDetail data={data} name={name} />
+            )}
+          </Table>
+        </DialogContent>
+      </Dialog>
+      <EditDataLink id={data.id} name={name} showText={false} />
+      <DeleteDataDialog id={data.id} name={name} />
     </div>
   )
 }

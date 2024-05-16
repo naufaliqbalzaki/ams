@@ -16,7 +16,6 @@ return new class extends Migration
       $table->foreignId('parent_id')->nullable()->constrained('instances')->cascadeOnDelete();
       $table->string('name');
       $table->boolean('is_active')->default(true);
-      $table->string('kepsek')->nullable();
       $table->string('website')->nullable();
       $table->string('email')->nullable();
       $table->string('image')->nullable();

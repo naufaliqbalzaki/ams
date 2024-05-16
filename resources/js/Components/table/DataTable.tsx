@@ -23,21 +23,28 @@ import {
   TableRow
 } from '@/Components/ui/table'
 import { cn } from '@/lib/utils'
+import { useEffect } from 'react'
 import { DataTablePagination } from './DataTablePagination'
 import { DataTableToolbar } from './DataTableToolbar'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  name: 'documents' | 'instances'
+  name?: 'documents' | 'instances' | 'reports'
   doc_type?: 'central' | 'east'
+  searchParam?: string
+  showToolbar?: boolean
+  pageSizeOptions?: number[]
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   name,
-  doc_type
+  doc_type,
+  searchParam,
+  showToolbar = true,
+  pageSizeOptions = [10, 20, 30, 40, 50, 100, 200, 500]
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
@@ -67,14 +74,21 @@ export function DataTable<TData, TValue>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues()
   })
-
+  useEffect(() => {
+    if (pageSizeOptions) {
+      table.setPageSize(pageSizeOptions[0])
+    }
+  }, [table])
   return (
     <div className="space-y-4">
-      <DataTableToolbar
-        table={table}
-        name={name}
-        doc_type={doc_type}
-      />
+      {showToolbar && (
+        <DataTableToolbar
+          table={table}
+          name={name}
+          doc_type={doc_type}
+          searchParam={searchParam}
+        />
+      )}
       <div className="border rounded-md">
         <Table>
           <TableHeader>
@@ -100,29 +114,30 @@ export function DataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className={cn(
-                        // if odd, add bg-gray-50
-                        parseInt(cell.row.id) % 2 === 0
-                          ? 'bg-background'
-                          : 'dark:bg-neutral-900 bg-neutral-100'
-                      )}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+              <>
+                {table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && 'selected'}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        className={cn(
+                          parseInt(cell.row.id) % 2 === 0
+                            ? 'bg-background'
+                            : 'dark:bg-neutral-900 bg-neutral-100'
+                        )}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </>
             ) : (
               <TableRow>
                 <TableCell
@@ -136,7 +151,10 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination
+        table={table}
+        pageSizeOptions={pageSizeOptions}
+      />
     </div>
   )
 }

@@ -17,20 +17,22 @@ import {
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>
+  pageSizeOptions: number[]
 }
 
 export function DataTablePagination<TData>({
-  table
+  table,
+  pageSizeOptions
 }: DataTablePaginationProps<TData>) {
   return (
     <div className="flex items-center justify-between px-2">
       <div className="flex-1 text-sm text-muted-foreground">
         {table.getFilteredSelectedRowModel().rows.length} of{' '}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
+        {table.getFilteredRowModel().rows.length} baris terpilih.
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">Rows per page</p>
+          <p className="text-sm font-medium">Baris per halaman</p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
@@ -43,7 +45,7 @@ export function DataTablePagination<TData>({
               />
             </SelectTrigger>
             <SelectContent side="top">
-              {[10, 20, 30, 40, 50, 100, 200, 500].map((pageSize) => (
+              {pageSizeOptions.map((pageSize) => (
                 <SelectItem key={pageSize} value={`${pageSize}`}>
                   {pageSize}
                 </SelectItem>
@@ -51,8 +53,8 @@ export function DataTablePagination<TData>({
             </SelectContent>
           </Select>
         </div>
-        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Page {table.getState().pagination.pageIndex + 1} of{' '}
+        <div className="flex items-center justify-center text-sm font-medium">
+          Halaman {table.getState().pagination.pageIndex + 1} dari{' '}
           {table.getPageCount()}
         </div>
         <div className="flex items-center space-x-2">
@@ -62,7 +64,7 @@ export function DataTablePagination<TData>({
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
           >
-            <span className="sr-only">Go to first page</span>
+            <span className="sr-only">Ke halaman pertama</span>
             <DoubleArrowLeftIcon className="w-4 h-4" />
           </Button>
           <Button
@@ -71,7 +73,7 @@ export function DataTablePagination<TData>({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            <span className="sr-only">Go to previous page</span>
+            <span className="sr-only">Ke halaman sebelumnya</span>
             <ChevronLeftIcon className="w-4 h-4" />
           </Button>
           <Button
@@ -80,7 +82,7 @@ export function DataTablePagination<TData>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            <span className="sr-only">Go to next page</span>
+            <span className="sr-only">Ke halaman selanjutnya</span>
             <ChevronRightIcon className="w-4 h-4" />
           </Button>
           <Button
@@ -91,7 +93,7 @@ export function DataTablePagination<TData>({
             }
             disabled={!table.getCanNextPage()}
           >
-            <span className="sr-only">Go to last page</span>
+            <span className="sr-only">Ke halaman terakhir</span>
             <DoubleArrowRightIcon className="w-4 h-4" />
           </Button>
         </div>

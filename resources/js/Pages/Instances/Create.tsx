@@ -13,12 +13,12 @@ export default function CreateInstancePage({
       header={
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-            New Instances
+            Buat Dinas Baru
           </h2>
         </div>
       }
     >
-      <Head title="New Instances" />
+      <Head title="Buat Dinas Baru" />
 
       <div className="px-8 mx-auto max-w-7xl">
         <InstanceForm appUrl={appUrl} />

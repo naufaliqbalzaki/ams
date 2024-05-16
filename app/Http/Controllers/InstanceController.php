@@ -42,7 +42,7 @@ class InstanceController extends Controller
 
     Instance::create($valid);
 
-    session()->flash('success', 'Instance created successfully');
+    session()->flash('success', 'Berhasil menambahkan dinas baru');
     return redirect()->route('instances.index');
   }
 
@@ -82,7 +82,7 @@ class InstanceController extends Controller
 
     $instance->update($valid);
 
-    session()->flash('success', 'Instance updated successfully');
+    session()->flash('success', 'Berhasil mengubah data dinas');
     return redirect()->route('instances.index');
   }
 
@@ -95,9 +95,9 @@ class InstanceController extends Controller
 
     $res = $instance->delete();
     if ($res) {
-      session()->flash('success', 'Instance deleted successfully');
+      session()->flash('success', 'Berhasil menghapus dinas');
     } else {
-      session()->flash('error', 'Instance deletion failed');
+      session()->flash('error', 'Gagal menghapus dinas');
     }
     return redirect()->route('instances.index');
   }

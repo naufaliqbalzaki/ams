@@ -3,8 +3,7 @@ import { Config } from 'ziggy-js'
 export interface User {
   id: number
   name: string
-  email: string
-  email_verified_at: string
+  username: string
 }
 
 export type PageProps<
@@ -27,12 +26,10 @@ export interface Document {
   user_id: number
   instance_id: string
   doc_type: string
-  type: 'incoming' | 'outgoing'
   number: string
   issue_date: Date
   verification_date: Date
   from: string
-  to: string
   subject: string
   file: string | File
   phone: string
@@ -52,7 +49,7 @@ export type Instance = {
   kepsek: string
   website: string
   email: string
-  image?: File | null
+  image?: File | string | null
   address: string
   district: string
   city: string

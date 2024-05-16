@@ -27,9 +27,8 @@ export default function CreateDocumentPage({
       header={
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-            New{' '}
-            {docType.charAt(0).toUpperCase() + docType.slice(1) + ' '}
-            Document
+            Buat Surat Masuk
+            {docType === 'central' ? ' Pusat' : ' Timur'}
           </h2>
         </div>
       }

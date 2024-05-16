@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\InstanceController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\Document;
@@ -23,24 +25,24 @@ Route::middleware('auth')->group(function () {
 
     $data = array(
       'doc_central' => [
-        'name' => 'Central Documents',
+        'name' => 'Surat Masuk Pusat',
         'data' => $doc_central,
-        'unit' => 'doc'
+        'unit' => 'surat'
       ],
       'doc_east' => [
-        'name' => 'East Documents',
+        'name' => 'Surat Masuk Timur',
         'data' => $doc_east,
-        'unit' => 'doc'
+        'unit' => 'surat'
       ],
       'instance_active' => [
-        'name' => 'Active Instances',
+        'name' => 'Dinas Aktif',
         'data' => $instance_active,
-        'unit' => 'instance'
+        'unit' => 'dinas'
       ],
       'instance_inactive' => [
-        'name' => 'Deactive Instances',
+        'name' => 'Dinas Tidak Aktif',
         'data' => $instance_inactive,
-        'unit' => 'instance'
+        'unit' => 'dinas'
       ],
     );
     return Inertia::render('Dashboard', [
@@ -59,6 +61,13 @@ Route::middleware('auth')->group(function () {
   Route::post('/documents/import', [DocumentController::class, 'import'])->name('documents.import');
   Route::get('/documents/file/export', [DocumentController::class, 'export'])->name('documents.file.export');
   Route::post('/documents/destroy_batch', [DocumentController::class, 'destroyBatch'])->name('documents.destroy_batch');
+
+  Route::get('/backups', [BackupController::class, 'index'])->name('backups.index');
+  Route::get('/backups/create', [BackupController::class, 'create'])->name('backups.create');
+  Route::get('/backups/download/{name}', [BackupController::class, 'download'])->name('backups.download');
+
+  Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+  Route::get('/reports/download', [ReportController::class, 'download'])->name('reports.download');
 });
 
 require __DIR__ . '/auth.php';

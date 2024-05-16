@@ -12,14 +12,6 @@ import {
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
 import { Label } from '@/Components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/Components/ui/select'
 import { router, useForm } from '@inertiajs/react'
 import { UploadIcon } from '@radix-ui/react-icons'
 import { FormEvent } from 'react'
@@ -48,8 +40,8 @@ export const ImportForm = ({
   function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     if (data.xlsx === null)
-      toast.error('Please select a file to import')
-    toast.loading('Importing documents...')
+      toast.error('Tolong pilih file xlsx yang akan diimport.')
+    toast.loading('Mengimport dokumen...')
     post(route('documents.import'), {
       forceFormData: true,
       onSuccess: () => {
@@ -76,10 +68,9 @@ export const ImportForm = ({
         <AlertDialogHeader>
           <AlertDialogTitle>Import Documents (xlsx)</AlertDialogTitle>
           <AlertDialogDescription>
-            Upload a xlsx file to import documents, make sure your
-            following the correct format.{' '}
+            Import dokumen menggunakan template yang telah disediakan.{' '}
             <a href="#" className="text-blue-500">
-              Download the template
+              Unduh template
             </a>
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -87,7 +78,7 @@ export const ImportForm = ({
           <div className="mt-4">
             <div className="mt-4">
               <Label className="mb-1" htmlFor="xlsx">
-                Select a file
+                Pilih file xlsx
               </Label>
               <Input
                 id="xlsx"
@@ -102,26 +93,6 @@ export const ImportForm = ({
                 }}
               />
               <InputError message={errors.xlsx} className="mt-2" />
-            </div>
-            <div className="mt-2">
-              <Label className="mb-1" htmlFor="type">
-                Document type
-              </Label>
-              <Select
-                onValueChange={(value) => setData('type', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a document type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="incoming">Incoming</SelectItem>
-                    <SelectItem value="outgoing">Outgoing</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-
-              <InputError message={errors.type} className="mt-2" />
             </div>
             <div className="mt-4">
               <Input
@@ -140,7 +111,7 @@ export const ImportForm = ({
           </div>
           <AlertDialogFooter className="mt-4">
             <AlertDialogCancel disabled={processing}>
-              Cancel
+              Batal
             </AlertDialogCancel>
             <Button type="submit" disabled={processing}>
               Import

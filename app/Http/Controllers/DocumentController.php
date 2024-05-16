@@ -7,7 +7,11 @@ use App\Http\Requests\UpdateDocumentRequest;
 use App\Models\Document;
 use App\Models\Instance;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\File\File;
 
 class DocumentController extends Controller
@@ -48,8 +52,9 @@ class DocumentController extends Controller
   public function store(StoreDocumentRequest $request)
   {
     $valid = $request->validated();
-    $valid['issue_date'] = strtotime($valid['issue_date'],);
-    $valid['verification_date'] = strtotime($valid['verification_date']);
+    $valid['issue_date'] = date('Y-m-d H:i:s', strtotime($valid['issue_date']));
+    $valid['verification_date'] =  date('Y-m-d H:i:s', strtotime($valid['verification_date']));
+
 
     if ($request->hasFile('file')) {
       $res = $request->file->store('public/documents');
@@ -59,7 +64,7 @@ class DocumentController extends Controller
 
     Document::create($valid);
 
-    session()->flash('success', 'Document created successfully');
+    session()->flash('success', 'Berhasil menambahkan dokumen baru');
     return redirect()->route('documents.index', [
       'type' => $valid['doc_type'],
     ]);
@@ -79,8 +84,10 @@ class DocumentController extends Controller
   public function edit(Document $document)
   {
     $document->instance_id = (string) $document->instance_id;
-    $localPath = storage_path('app/public/documents/' . $document->file);
-    $document->file = new File($localPath);
+    if ($document->file) {
+      $localPath = storage_path('app/public/documents/' . $document->file);
+      $document->file = new File($localPath);
+    }
     return Inertia::render('Documents/Edit', [
       'document' => $document,
       'instances' => Instance::all(),
@@ -105,7 +112,7 @@ class DocumentController extends Controller
 
     $document->update($valid);
 
-    session()->flash('success', 'Document updated successfully');
+    session()->flash('success', 'Berhasil mengubah dokumen');
     return redirect()->route('documents.index', [
       'type' => $valid['doc_type'],
     ]);
@@ -120,7 +127,7 @@ class DocumentController extends Controller
       $document->deleteFile();
     };
     $document->delete();
-    session()->flash('success', 'Document deleted successfully');
+    session()->flash('success', 'Berhasil menghapus dokumen');
     return redirect()->route('documents.index', [
       'type' => $document->doc_type,
     ]);
@@ -139,7 +146,7 @@ class DocumentController extends Controller
         $document->delete();
       }
     }
-    session()->flash('success', $count . ' documents deleted successfully');
+    session()->flash('success', $count . ' dokumen berhasil dihapus');
     return redirect()->route('documents.index', [
       'type' => $request->input('doc_type'),
     ]);
@@ -150,14 +157,17 @@ class DocumentController extends Controller
     $request->validate([
       'xlsx' => 'required|mimes:xlsx,xls',
       'doc_type' => 'required|string',
-      'type' => 'required|string'
     ]);
 
     $file = $request->file('xlsx');
     $fileName = time() . '_' . $file->getClientOriginalName();
     $file->storeAs('public/documents/imports', $fileName);
+    if (!file_exists(storage_path('app/public/documents/imports/' . $fileName))) {
+      session()->flash('error', 'Failed to import documents');
+      return redirect()->back();
+    }
 
-    $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(storage_path('app/public/documents/imports/' . $fileName));
+    $spreadsheet = IOFactory::load(storage_path('app/public/documents/imports/' . $fileName));
     $sheetData = $spreadsheet->getActiveSheet()->toArray();
 
     for ($i = 0; $i < 3; $i++) {
@@ -188,49 +198,29 @@ class DocumentController extends Controller
 
         $next_action  = $value[5];
         $corrective_action = $value[6];
-        $issue_date  = $value[7] !== null && strtotime($value[7]) ? date('Y-m-d', strtotime($value[7])) : null;
-        $issue_time  =  $value[8] !== null && strtotime($value[8]) ? date('H:i:s', strtotime($value[8])) : null;
+        $issue_date  = $value[7] !== null && (strtotime($value[7])) ? date('Y-m-d', strtotime($value[7])) : null;
+        $issue_time  =  $value[8] !== null && (strtotime($value[8])) ? date('H:i:s', strtotime($value[8])) : null;
 
-        $verification_date = $value[9] !== null && strtotime($value[9]) ? date('Y-m-d', strtotime($value[9])) : null;
-        $verification_time  =  $value[10] !== null && strtotime($value[10]) ? date('H:i:s', strtotime($value[10])) : null;
+        $verification_date = $value[9] !== null && (strtotime($value[9])) ? date('Y-m-d', strtotime($value[9])) : null;
+        $verification_time  =  $value[10] !== null && (strtotime($value[10])) ? date('H:i:s', strtotime($value[10])) : null;
         $description  = $value[11];
         $phone = $value[12];
 
         if ($from !== null) {
-          $document = Document::where('number', $number)->first();
-          if ($document === null) {
-            Document::create([
-              'user_id' => auth()->id(),
-              'number' => $number,
-              'from' => $from,
-              'subject' => $subject,
-              'instance_id' => $instance_id,
-              'doc_type' => $request->doc_type,
-              'next_action' => $next_action,
-              'corrective_action' => $corrective_action,
-              'issue_date' => $issue_date . ' ' . $issue_time,
-              'type' => $request->type,
-              'verification_date' => $verification_date . ' ' . $verification_time,
-              'description' => $description,
-              'phone' => $phone,
-            ]);
-          } else {
-            $document->update([
-              'user_id' => auth()->id(),
-              'number' => $number,
-              'from' => $from,
-              'subject' => $subject,
-              'instance_id' => $instance_id,
-              'doc_type' => $request->doc_type,
-              'next_action' => $next_action,
-              'corrective_action' => $corrective_action,
-              'issue_date' => $issue_date . ' ' . $issue_time,
-              'type' => $request->type,
-              'verification_date' => $verification_date . ' ' . $verification_time,
-              'description' => $description,
-              'phone' => $phone,
-            ]);
-          }
+          Document::create([
+            'user_id' => auth()->id(),
+            'number' => $number,
+            'from' => $from,
+            'subject' => $subject,
+            'instance_id' => $instance_id,
+            'doc_type' => $request->doc_type,
+            'next_action' => $next_action,
+            'corrective_action' => $corrective_action,
+            'issue_date' => $issue_date . ' ' . $issue_time,
+            'verification_date' => $verification_date . ' ' . $verification_time,
+            'description' => $description,
+            'phone' => $phone,
+          ]);
           $count++;
         }
       }
@@ -239,67 +229,58 @@ class DocumentController extends Controller
     session()->flash('success', $count . ' ' . $request->type . ' documents imported successfully');
     return redirect()->back();
   }
-
   public function export()
   {
-    $doc_type = request()->query('doc_type');
 
-    // get documents
-    $documents = Document::where('doc_type', $doc_type)->get();
+    $documents = Document::all();
 
-    // check if there are documents
-    if (count($documents) === 0) {
-      session()->flash('error', 'No documents to export');
-      return redirect()->back();
-    } else {
-      // create new instance of PhpSpreadsheet
-      $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-      $sheet = $spreadsheet->getActiveSheet();
-
-      // set the first row
-      $sheet->setCellValue('A1', 'No');
-      $sheet->setCellValue('B1', 'Number');
-      $sheet->setCellValue('C1', 'Type');
-      $sheet->setCellValue('D1', 'From');
-      $sheet->setCellValue('E1', 'Subject');
-      $sheet->setCellValue('F1', 'Instance');
-      $sheet->setCellValue('G1', 'Next Action');
-      $sheet->setCellValue('H1', 'Corrective Action');
-      $sheet->setCellValue('I1', 'Issue Date');
-      $sheet->setCellValue('J1', 'Verification Date');
-      $sheet->setCellValue('K1', 'Description');
-      $sheet->setCellValue('L1', 'Phone');
-
-      // set the row counter
-      $row = 2;
-
-      // loop through the documents
-
-      foreach ($documents as $document) {
-        $sheet->setCellValue('A' . $row, $row - 1);
-        $sheet->setCellValue('B' . $row, $document->number);
-        $sheet->setCellValue('C' . $row, $document->type);
-        $sheet->setCellValue('D' . $row, $document->from);
-        $sheet->setCellValue('E' . $row, $document->subject);
-        $sheet->setCellValue('F' . $row, $document->instance->name);
-        $sheet->setCellValue('G' . $row, $document->next_action);
-        $sheet->setCellValue('H' . $row, $document->corrective_action);
-        $sheet->setCellValue('I' . $row, $document->issue_date);
-        $sheet->setCellValue('J' . $row, $document->verification_date);
-        $sheet->setCellValue('K' . $row, $document->description);
-        $sheet->setCellValue('L' . $row, $document->phone);
-        $row++;
-      }
-
-      // set the file name
-      $fileName = 'documents_' . $doc_type . '_' . time() . '.xlsx';
-
-      // save the file
-      $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-      $writer->save(storage_path('app/public/documents/exports/' . $fileName));
-
-      // return the file
-      return response()->download(storage_path('app/public/documents/exports/' . $fileName));
+    if ($documents->isEmpty()) {
+      return redirect()->back()->with('error', 'No documents to export');
     }
+
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+
+
+
+    $sheet->setCellValue('A1', 'Nomor');
+    $sheet->setCellValue('B1', 'Kantor');
+    $sheet->setCellValue('C1', 'Pemohon');
+    $sheet->setCellValue('D1', 'Perizinan');
+    $sheet->setCellValue('E1', 'Dinas');
+    $sheet->setCellValue('F1', 'Tindak Lanjut');
+    $sheet->setCellValue('G1', 'Tindakan Koreksi');
+    $sheet->setCellValue('H1', 'Tanggal Terbit');
+    $sheet->setCellValue('I1', 'Tanggal Verifikasi');
+    $sheet->setCellValue('J1', 'Keterangan');
+    $sheet->setCellValue('K1', 'Telepon');
+
+    $row = 2;
+    foreach ($documents as $document) {
+      $sheet->setCellValue('A' . $row, $document->number);
+      $sheet->setCellValue('B' . $row, $document->doc_type == 'central' ? 'Pusat' : 'Timur');
+      $sheet->setCellValue('C' . $row, $document->from);
+      $sheet->setCellValue('D' . $row, $document->subject);
+      $sheet->setCellValue('E' . $row, $document->instance->name);
+      $sheet->setCellValue('F' . $row, $document->next_action);
+      $sheet->setCellValue('G' . $row, $document->corrective_action);
+      $sheet->setCellValue('H' . $row, $document->issue_date);
+      $sheet->setCellValue('I' . $row, $document->verification_date);
+      $sheet->setCellValue('J' . $row, $document->description);
+      $sheet->setCellValue('K' . $row, $document->phone);
+      $row++;
+    }
+
+    $writer = new Xlsx($spreadsheet);
+    $fileName = 'documents_' . time() . '.xlsx';
+    $filePath = storage_path('app/public/documents/exports/' . $fileName);
+
+    if (!file_exists(dirname($filePath))) {
+      mkdir(dirname($filePath), 0777, true);
+    }
+
+    $writer->save($filePath);
+
+    return response()->download($filePath)->deleteFileAfterSend(true);
   }
 }

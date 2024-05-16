@@ -1,7 +1,6 @@
-import ApplicationLogo from '@/Components/ApplicationLogo'
-import Dropdown from '@/Components/Dropdown'
 import NavLink from '@/Components/NavLink'
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink'
+import ThemeButton from '@/Components/ThemeButton'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,7 +32,13 @@ export default function Authenticated({
             <div className="flex">
               <div className="flex items-center shrink-0">
                 <Link href="/">
-                  <ApplicationLogo className="block w-auto text-gray-800 fill-current h-9 dark:text-gray-200" />
+                  {/* <ApplicationLogo className="block w-auto text-gray-800 fill-current h-9 dark:text-gray-200" /> */}
+
+                  <img
+                    className="w-auto h-10 m-auto rounded-full"
+                    src="/images/logo.jpeg"
+                    alt="Logo"
+                  />
                 </Link>
               </div>
 
@@ -48,7 +53,7 @@ export default function Authenticated({
                   href={route('instances.index')}
                   active={route().current('instances.index')}
                 >
-                  Instances
+                  Dinas
                 </NavLink>
                 <DropdownMenu onOpenChange={setShowInstancesDropdown}>
                   <DropdownMenuTrigger
@@ -60,7 +65,7 @@ export default function Authenticated({
                         href="#"
                         active={route().current('documents.*')}
                       >
-                        Documents
+                        Surat
                       </NavLink>
                       <ChevronRightIcon
                         className={cn(
@@ -81,7 +86,7 @@ export default function Authenticated({
                         })}
                         className="w-full"
                       >
-                        Central
+                        Pusat
                       </NavLink>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
@@ -94,54 +99,47 @@ export default function Authenticated({
                         })}
                         className="w-full"
                       >
-                        East
+                        Timur
                       </NavLink>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+                <NavLink
+                  href={route('reports.index')}
+                  active={route().current('reports.index')}
+                >
+                  Laporan
+                </NavLink>
+                <NavLink
+                  href={route('backups.index')}
+                  active={route().current('backups.index')}
+                >
+                  Backup
+                </NavLink>
               </div>
             </div>
 
             <div className="hidden sm:flex sm:items-center sm:ms-6">
-              <div className="relative ms-3">
-                <Dropdown>
-                  <Dropdown.Trigger>
-                    <span className="inline-flex rounded-md">
-                      <button
-                        type="button"
-                        className="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out border border-transparent rounded-md dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none"
-                      >
-                        {user.name}
-
-                        <svg
-                          className="ms-2 -me-0.5 h-4 w-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </button>
-                    </span>
-                  </Dropdown.Trigger>
-
-                  <Dropdown.Content>
-                    <Dropdown.Link href={route('profile.edit')}>
-                      Profile
-                    </Dropdown.Link>
-                    <Dropdown.Link
-                      href={route('logout')}
-                      method="post"
-                      as="button"
+              <div className="relative flex items-center ms-3">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      className="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out border border-transparent rounded-md dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none"
                     >
-                      Log Out
-                    </Dropdown.Link>
-                  </Dropdown.Content>
-                </Dropdown>
+                      {user.name}
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <Link href={route('profile.edit')}>
+                      <DropdownMenuItem>Profile</DropdownMenuItem>
+                    </Link>
+                    <Link method="post" href={route('logout')}>
+                      <DropdownMenuItem>Log Out</DropdownMenuItem>
+                    </Link>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <ThemeButton />
               </div>
             </div>
 
@@ -205,18 +203,39 @@ export default function Authenticated({
               href={route('instances.index')}
               active={route().current('instances.index')}
             >
-              Instances
+              Dinas
+            </ResponsiveNavLink>
+            <ResponsiveNavLink
+              href={route('documents.index')}
+              active={route().current('documents.index')}
+            >
+              Surat
+            </ResponsiveNavLink>
+            <ResponsiveNavLink
+              href={route('reports.index')}
+              active={route().current('reports.index')}
+            >
+              Laporan
+            </ResponsiveNavLink>
+            <ResponsiveNavLink
+              href={route('backups.index')}
+              active={route().current('backups.index')}
+            >
+              Backup
             </ResponsiveNavLink>
           </div>
 
           <div className="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
-            <div className="px-4">
-              <div className="text-base font-medium text-gray-800 dark:text-gray-200">
-                {user.name}
+            <div className="flex items-center justify-between px-4">
+              <div>
+                <div className="text-base font-medium text-gray-800 dark:text-gray-200">
+                  {user.name}
+                </div>
+                <div className="text-sm font-medium text-gray-500">
+                  {user.username}
+                </div>
               </div>
-              <div className="text-sm font-medium text-gray-500">
-                {user.email}
-              </div>
+              <ThemeButton className="ml-4" />
             </div>
 
             <div className="mt-3 space-y-1">
@@ -236,7 +255,7 @@ export default function Authenticated({
       </nav>
 
       {header && (
-        <header className="shadow ">
+        <header>
           <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
             {header}
           </div>

@@ -57,7 +57,6 @@ export const InstanceForm = ({
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setData('image', e.target.files[0])
-      console.log(data.image)
       const reader = new FileReader()
       reader.onload = () => {
         setImage(reader.result)
@@ -76,11 +75,11 @@ export const InstanceForm = ({
   return (
     <form onSubmit={submit}>
       <div>
-        <Label htmlFor="name">Name</Label>
+        <Label htmlFor="name">Nama</Label>
         <Input
-          id="username"
+          id="name"
           type="text"
-          name="username"
+          name="name"
           value={data.name}
           className="block w-full mt-1"
           autoComplete="additional-name"
@@ -90,7 +89,7 @@ export const InstanceForm = ({
         <InputError message={errors.name} className="mt-2" />
       </div>
       <div className="flex items-center gap-2 mt-4">
-        <Label htmlFor="is_active">Active</Label>
+        <Label htmlFor="is_active">Aktif ?</Label>
         <Checkbox
           id="is_active"
           name="is_active"
@@ -101,19 +100,6 @@ export const InstanceForm = ({
           }
         />
         <InputError message={errors.is_active} className="mt-2" />
-      </div>
-      <div className="mt-4">
-        <Label htmlFor="kepsek">Kepsek</Label>
-        <Input
-          id="kepsek"
-          type="text"
-          name="kepsek"
-          value={data.kepsek}
-          className="block w-full mt-1"
-          autoComplete="additional-name"
-          onChange={(e) => setData('kepsek', e.target.value)}
-        />
-        <InputError message={errors.kepsek} className="mt-2" />
       </div>
       <div className="mt-4">
         <Label htmlFor="website">Website</Label>
@@ -142,7 +128,7 @@ export const InstanceForm = ({
         <InputError message={errors.email} className="mt-2" />
       </div>
       <div className="mt-4">
-        <Label htmlFor="image">Image</Label>
+        <Label htmlFor="image">Logo</Label>
         <div className="flex flex-col items-center justify-center w-full gap-2">
           {image && (
             <img
@@ -164,7 +150,7 @@ export const InstanceForm = ({
       </div>
       <Separator className="mt-8" />
       <div className="mt-4">
-        <Label htmlFor="address">Address</Label>
+        <Label htmlFor="address">Alamat</Label>
         <Input
           id="address"
           type="text"
@@ -176,7 +162,7 @@ export const InstanceForm = ({
         />
       </div>
       <div className="mt-4">
-        <Label htmlFor="district">District</Label>
+        <Label htmlFor="district">Kecamatan</Label>
         <Input
           id="district"
           type="text"
@@ -188,7 +174,7 @@ export const InstanceForm = ({
         />
       </div>
       <div className="mt-4">
-        <Label htmlFor="city">City</Label>
+        <Label htmlFor="city">Kota</Label>
         <Input
           id="city"
           type="text"
@@ -200,7 +186,7 @@ export const InstanceForm = ({
         />
       </div>
       <div className="mt-4">
-        <Label htmlFor="province">Province</Label>
+        <Label htmlFor="province">Provinsi</Label>
         <Input
           id="province"
           type="text"
@@ -212,7 +198,7 @@ export const InstanceForm = ({
         />
       </div>
       <div className="mt-4">
-        <Label htmlFor="postal_code">Postal Code</Label>
+        <Label htmlFor="postal_code">Kode Pos</Label>
         <Input
           id="postal_code"
           type="number"
@@ -229,7 +215,7 @@ export const InstanceForm = ({
           className="w-full mt-2"
           disabled={processing}
         >
-          {instance ? 'Update' : 'Create'}
+          {instance ? 'Ubah' : 'Buat'}
         </Button>
       </div>
     </form>

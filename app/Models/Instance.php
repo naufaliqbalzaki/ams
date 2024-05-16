@@ -14,7 +14,6 @@ class Instance extends Model
     'parent_id',
     'name',
     'is_active',
-    'kepsek',
     'website',
     'email',
     'image',

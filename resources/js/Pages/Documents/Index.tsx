@@ -2,23 +2,11 @@ import { DataTable } from '@/Components/table/DataTable'
 import { DataTableRowActions } from '@/Components/table/DataTableRowActions'
 import { Button } from '@/Components/ui/button'
 import { Checkbox } from '@/Components/ui/checkbox'
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger
-} from '@/Components/ui/tabs'
 import Authenticated from '@/Layouts/AuthenticatedLayout'
 import { Document, PageProps } from '@/types'
 import { Head, router } from '@inertiajs/react'
-import {
-  DownloadIcon,
-  EnterIcon,
-  ExitIcon,
-  PlusIcon
-} from '@radix-ui/react-icons'
+import { DownloadIcon, PlusIcon } from '@radix-ui/react-icons'
 import { ColumnDef } from '@tanstack/react-table'
-import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { ImportForm } from './_import_form'
@@ -57,48 +45,40 @@ function generateColumn({
     },
     {
       accessorKey: 'number',
-      header: 'Number'
+      header: 'No.'
     },
     {
       accessorKey: 'from',
-      header: 'From'
+      header: 'Pemohon'
     },
     {
       accessorKey: 'instance_name',
-      header: 'Instance'
+      header: 'Dinas'
     },
     {
       accessorKey: 'subject',
-      header: 'Subject'
-    },
-    {
-      accessorKey: 'next_action',
-      header: 'Next Action'
-    },
-    {
-      accessorKey: 'corrective_action',
-      header: 'Corrective Action'
+      header: 'Perizinan'
     },
     {
       accessorKey: 'description',
-      header: 'Description'
+      header: 'Keterangan'
     },
     {
       accessorKey: 'phone',
-      header: 'Phone'
+      header: 'Telepon'
     },
     {
       accessorKey: 'issue_date',
-      header: 'Issue Date'
+      header: 'Tanggal Terbit'
     },
     {
       accessorKey: 'verification_date',
-      header: 'Verification Date'
+      header: 'Tanggal Verifikasi'
     },
     {
       id: 'actions',
       header() {
-        return <div className="text-center">Actions</div>
+        return <div className="text-center">Aksi</div>
       },
       cell: ({ row }) => (
         <DataTableRowActions row={row} name="documents" />
@@ -137,39 +117,16 @@ export default function DocumentsPage({
       header={
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-            {doc_type.charAt(0).toUpperCase() +
-              doc_type.slice(1) +
-              ' '}
-            Documents
+            Surat Masuk
+            {doc_type === 'central' ? ' Pusat' : ' Timur'}
           </h2>
           <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              onClick={async () => {
-                const res = await axios.get(
-                  route('documents.file.export', {
-                    doc_type: doc_type
-                  })
-                )
-                const filename =
-                  res.headers['content-disposition'].split(
-                    'filename='
-                  )[1]
-                const url = window.URL.createObjectURL(
-                  new Blob([res.data])
-                )
-                const link = document.createElement('a')
-                link.href = url
-                link.setAttribute('download', filename)
-                document.body.appendChild(link)
-                link.click()
-                window.URL.revokeObjectURL(url)
-                toast.success('Exported successfully')
-              }}
-            >
-              <DownloadIcon className="w-5 h-5" />
-              Export
-            </Button>
+            <a href={route('documents.file.export')}>
+              <Button variant="secondary" type="button">
+                <DownloadIcon className="w-5 h-5" />
+                Export
+              </Button>
+            </a>
             <ImportForm
               doc_type={doc_type}
               setImportOpen={setImportOpen}
@@ -182,7 +139,7 @@ export default function DocumentsPage({
               }
             >
               <PlusIcon className="w-5 h-5" />
-              Create new
+              Buat Baru
             </Button>
           </div>
         </div>
@@ -190,38 +147,14 @@ export default function DocumentsPage({
     >
       <Head title="Documents" />
 
-      <div className="px-8 mx-auto max-w-7xl">
-        <Tabs defaultValue="incoming">
-          <TabsList>
-            <TabsTrigger value="incoming">
-              Incoming <EnterIcon className="ml-2" />
-            </TabsTrigger>
-            <TabsTrigger value="outgoing">
-              Outgoing
-              <ExitIcon className="ml-2" />
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="incoming">
-            <DataTable
-              columns={columns}
-              data={documents.filter(
-                (doc) => doc.type === 'incoming'
-              )}
-              name="documents"
-              doc_type="central"
-            />
-          </TabsContent>
-          <TabsContent value="outgoing">
-            <DataTable
-              columns={columns}
-              data={documents.filter(
-                (doc) => doc.type === 'outgoing'
-              )}
-              name="documents"
-              doc_type="east"
-            />
-          </TabsContent>
-        </Tabs>
+      <div className="px-8 pb-8 mx-auto max-w-7xl">
+        <DataTable
+          columns={columns}
+          data={documents}
+          name="documents"
+          doc_type="central"
+          searchParam="from"
+        />
       </div>
     </Authenticated>
   )

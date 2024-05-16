@@ -25,7 +25,7 @@ import { router } from '@inertiajs/react'
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
-  name: 'documents' | 'instances'
+  name?: 'documents' | 'instances' | 'reports'
   doc_type?: 'central' | 'east'
 }
 
@@ -56,28 +56,28 @@ export function DataTableViewOptions<TData>({
               size="sm"
               className="hidden h-8 mr-2 lg:flex"
             >
-              Delete selected
+              Hapus {selectedRows.length} baris terpilih
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>
-                Delete {selectedRows.length} selected rows?
+                Hapus {selectedRows.length} baris terpilih
               </AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to delete the selected rows?.
-                This action cannot be undone.
+                Apakah Anda yakin ingin menghapus{' '}
+                {selectedRows.length} baris terpilih?
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>Batal</AlertDialogCancel>
               <AlertDialogAction
                 className={buttonVariants({
                   variant: 'destructive'
                 })}
                 onClick={handleDeleteSelectedRows}
               >
-                Delete
+                Hapus
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -92,11 +92,13 @@ export function DataTableViewOptions<TData>({
             className="hidden h-8 ml-auto lg:flex"
           >
             <MixerHorizontalIcon className="w-4 h-4 mr-2" />
-            View
+            Filter
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[150px]">
-          <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+          <DropdownMenuLabel>
+            Kolom yang ditampilkan
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
           {table
             .getAllColumns()

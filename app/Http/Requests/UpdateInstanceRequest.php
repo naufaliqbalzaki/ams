@@ -27,7 +27,6 @@ class UpdateInstanceRequest extends FormRequest
       'parent_id' => ['nullable', 'integer'],
       'name' => ['required', 'string'],
       'is_active' => ['required', 'boolean'],
-      'kepsek' => ['required', 'string'],
       'website' => ['nullable', 'string'],
       'email' => ['required', 'email'],
       'image' => ['nullable', Rule::when(

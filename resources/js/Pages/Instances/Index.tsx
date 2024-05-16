@@ -49,11 +49,15 @@ function generateColumn({
     },
     {
       accessorKey: 'image',
-      header: 'Image',
+      header: 'Gambar',
       cell: ({ row }) => {
-        const url = row.original.image
+        console.log(row.original.image)
+        const isPlaceholder = row.original.image
+          ?.toString()
+          .startsWith('https://via.placeholder')
+        const url = !isPlaceholder
           ? appUrl + '/storage/instances/' + row.original.image
-          : 'https://via.placeholder.com/150'
+          : 'https://placehold.jp/150x150.png'
         return (
           <div className="object-cover bg-contain">
             <img
@@ -75,7 +79,7 @@ function generateColumn({
               column.toggleSorting(column.getIsSorted() === 'asc')
             }
           >
-            Name
+            Nama
             <CaretSortIcon className="w-4 h-4 ml-2" />
           </Button>
         )
@@ -88,22 +92,6 @@ function generateColumn({
           {row.original.name}
         </Link>
       )
-    },
-    {
-      accessorKey: 'kepsek',
-      header({ column }) {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() =>
-              column.toggleSorting(column.getIsSorted() === 'asc')
-            }
-          >
-            Kepsek
-            <CaretSortIcon className="w-4 h-4 ml-2" />
-          </Button>
-        )
-      }
     },
     {
       accessorKey: 'email',
@@ -124,7 +112,7 @@ function generateColumn({
     {
       accessorKey: 'is_active',
       header(props) {
-        return <div className="text-center">Active</div>
+        return <div className="text-center">Aktif</div>
       },
       cell: ({ row }) => (
         <div className="flex items-center justify-center">
@@ -138,7 +126,7 @@ function generateColumn({
     },
     {
       accessorKey: 'created_at',
-      header: 'Created At',
+      header: 'Dibuat pada',
       cell: ({ row }) => (
         <time dateTime={row.original.created_at}>
           {new Date(row.original.created_at).toLocaleDateString(
@@ -155,7 +143,7 @@ function generateColumn({
     {
       id: 'actions',
       header() {
-        return <div className="text-center">Actions</div>
+        return <div className="text-center">Aksi</div>
       },
       cell: ({ row }) => (
         <DataTableRowActions row={row} name="instances" />
@@ -190,25 +178,26 @@ export default function IndexInstancePage({
       header={
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-            Instances ( {instances.length} )
+            Dinas ( {instances.length} )
           </h2>
           <Button
             className="flex items-center gap-2"
             onClick={() => router.visit('/instances/create')}
           >
             <PlusIcon className="w-5 h-5" />
-            Create new
+            Buat Baru
           </Button>
         </div>
       }
     >
       <Head title="Instances" />
 
-      <div className="px-8 mx-auto max-w-7xl">
+      <div className="px-8 pb-8 mx-auto max-w-7xl">
         <DataTable
           columns={columns}
           data={instances}
           name="instances"
+          searchParam="name"
         />
       </div>
     </AuthenticatedLayout>
