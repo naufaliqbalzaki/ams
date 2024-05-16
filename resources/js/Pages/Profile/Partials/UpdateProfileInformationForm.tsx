@@ -27,7 +27,7 @@ export default function UpdateProfileInformation({
     recentlySuccessful
   } = useForm({
     name: user.name,
-    email: user.email
+    username: user.username
   })
 
   const submit: FormEventHandler = (e) => {
@@ -65,22 +65,22 @@ export default function UpdateProfileInformation({
         </div>
 
         <div>
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="username">username</Label>
 
           <Input
-            id="email"
-            type="email"
+            id="username"
+            type="username"
             className="block w-full mt-1"
-            value={data.email}
-            onChange={(e) => setData('email', e.target.value)}
+            value={data.username}
+            onChange={(e) => setData('username', e.target.value)}
             required
             autoComplete="username"
           />
 
-          <InputError className="mt-2" message={errors.email} />
+          <InputError className="mt-2" message={errors.username} />
         </div>
 
-        {mustVerifyEmail && user.email_verified_at === null && (
+        {mustVerifyEmail && user.username === null && (
           <div>
             <p className="mt-2 text-sm text-gray-800 dark:text-gray-200">
               Your email address is unverified.
