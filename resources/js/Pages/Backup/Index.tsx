@@ -3,7 +3,7 @@ import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import Authenticated from '@/Layouts/AuthenticatedLayout'
 import { PageProps } from '@/types'
-import { router } from '@inertiajs/react'
+import { Head, router } from '@inertiajs/react'
 import { DownloadIcon } from '@radix-ui/react-icons'
 import { ColumnDef } from '@tanstack/react-table'
 import axios from 'axios'
@@ -118,6 +118,8 @@ export default function BackupIndexPage({
         </div>
       }
     >
+      <Head title="Backup" />
+
       <div className="px-8 pb-8 mx-auto max-w-7xl">
         <DataTable
           columns={columns}

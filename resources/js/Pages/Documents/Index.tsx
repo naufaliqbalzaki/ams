@@ -111,6 +111,7 @@ export default function DocumentsPage({
       toast.error(flash.error)
     }
   }, [flash])
+  const type = doc_type === 'central' ? 'Pusat' : 'Timur'
   return (
     <Authenticated
       user={auth.user}
@@ -118,7 +119,7 @@ export default function DocumentsPage({
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
             Surat Masuk
-            {doc_type === 'central' ? ' Pusat' : ' Timur'}
+            {type}
           </h2>
           <div className="flex items-center gap-2">
             <a href={route('documents.file.export')}>
@@ -145,7 +146,7 @@ export default function DocumentsPage({
         </div>
       }
     >
-      <Head title="Documents" />
+      <Head title={`Surat Masuk ${type}`} />
 
       <div className="px-8 pb-8 mx-auto max-w-7xl">
         <DataTable

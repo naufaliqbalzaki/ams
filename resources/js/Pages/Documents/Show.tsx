@@ -1,5 +1,6 @@
 import Authenticated from '@/Layouts/AuthenticatedLayout'
 import { PageProps } from '@/types'
+import { Head } from '@inertiajs/react'
 
 export default function DocumentShowPage({ auth }: PageProps) {
   return (
@@ -11,6 +12,8 @@ export default function DocumentShowPage({ auth }: PageProps) {
         </h2>
       }
     >
+      <Head title="Document Show" />
+
       <div className="py-12">
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="overflow-hidden shadow-sm sm:rounded-lg">

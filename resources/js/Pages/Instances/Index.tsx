@@ -190,7 +190,7 @@ export default function IndexInstancePage({
         </div>
       }
     >
-      <Head title="Instances" />
+      <Head title="Dinas" />
 
       <div className="px-8 pb-8 mx-auto max-w-7xl">
         <DataTable
