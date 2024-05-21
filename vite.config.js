@@ -9,12 +9,12 @@ export default defineConfig({
       refresh: true
     }),
     react()
-  ]
+  ],
   // prod server
-  // server: {
-  //   https: true,
-  //   host: '0.0.0.0',
-  //   port: 8000,
-  //   open: false
-  // }
+  server: {
+    https: true,
+    host: '0.0.0.0',
+    port: 8000,
+    open: false
+  }
 })

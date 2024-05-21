@@ -7,9 +7,11 @@
 
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
-
     <!-- Scripts -->
     @routes
+    <script>
+        Ziggy.url = '{{ env('APP_URL') }}'
+    </script>
     @viteReactRefresh
     @vite(['resources/js/app.tsx', "resources/js/Pages/{$page['component']}.tsx"])
     @inertiaHead
