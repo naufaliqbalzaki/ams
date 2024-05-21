@@ -114,7 +114,6 @@ export function DataTable<TData, TValue>({
   let corrective = 0
   if (name === 'reports') {
     data.map((item: any) => {
-      console.log(item)
       approved = approved + item.approved_total
       corrective = corrective + item.corrective_total
       total = total + item.total

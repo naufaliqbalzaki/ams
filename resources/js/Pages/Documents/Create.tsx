@@ -16,9 +16,9 @@ export default function CreateDocumentPage({
 
   useEffect(() => {
     const nowUrl = new URL(window.location.href)
-    console.log('BASE URL:', nowUrl)
+
     const docTypeParam = nowUrl.searchParams.get('type')
-    console.log('PARAM:', docTypeParam)
+
     if (docTypeParam) {
       setType(docTypeParam)
     }

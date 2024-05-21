@@ -21,7 +21,7 @@ export default function EditDocumentPage({
       setType(docTypeParam)
     }
   }, [docType])
-  console.log(document)
+
   return (
     <Authenticated
       user={auth.user}

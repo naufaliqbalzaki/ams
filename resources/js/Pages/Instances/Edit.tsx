@@ -8,7 +8,6 @@ export default function EditInstancePage({
   auth,
   instance
 }: PageProps & { instance: Instance }) {
-  console.log(appUrl)
   return (
     <Authenticated
       user={auth.user}

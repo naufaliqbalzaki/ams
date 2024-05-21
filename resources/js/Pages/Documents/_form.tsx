@@ -79,9 +79,9 @@ export const DocumentForm = ({
     }
     if (!document) {
       data._method = 'post'
-      console.log(data)
+
       const url = route('documents.store')
-      console.log(url)
+
       post(route('documents.store'))
     }
   }

@@ -51,7 +51,6 @@ function generateColumn({
       accessorKey: 'image',
       header: 'Gambar',
       cell: ({ row }) => {
-        console.log(row.original.image)
         const isPlaceholder = row.original.image
           ?.toString()
           .startsWith('https://via.placeholder')

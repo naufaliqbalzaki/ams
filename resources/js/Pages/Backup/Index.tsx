@@ -88,7 +88,6 @@ export default function BackupIndexPage({
   appUrl,
   flash
 }: PageProps & { files: any[] }) {
-  console.log(files)
   const columns = generateColumn({ appUrl })
   useEffect(() => {
     toast.dismiss()
