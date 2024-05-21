@@ -34,7 +34,7 @@ export default function ResetPassword({
 
   return (
     <GuestLayout>
-      <Head title="Reset Password" />
+      <Head title="Atur ulang password" />
 
       <form onSubmit={submit}>
         <div>
@@ -54,7 +54,7 @@ export default function ResetPassword({
         </div>
 
         <div className="mt-4">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">Kata sandi</Label>
 
           <Input
             id="password"
@@ -71,7 +71,7 @@ export default function ResetPassword({
 
         <div className="mt-4">
           <Label htmlFor="password_confirmation">
-            Confirm Password
+            Konfirmasi kata sandi
           </Label>
 
           <Input
@@ -93,7 +93,7 @@ export default function ResetPassword({
 
         <div className="flex items-center justify-end mt-4">
           <Button className="ms-4" disabled={processing}>
-            Reset Password
+            Atur ulang password
           </Button>
         </div>
       </form>

@@ -17,7 +17,10 @@ export default function Authenticated({
   user,
   header,
   children
-}: PropsWithChildren<{ user: User; header?: ReactNode }>) {
+}: PropsWithChildren<{
+  user: User
+  header?: ReactNode
+}>) {
   const [showingNavigationDropdown, setShowingNavigationDropdown] =
     useState(false)
 
@@ -25,15 +28,13 @@ export default function Authenticated({
     useState(false)
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen">
       <nav className="border-b border-gray-100 dark:border-gray-700">
-        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div className={cn('px-4 mx-auto max-w-7xl sm:px-6 lg:px-8')}>
           <div className="flex justify-between h-16">
             <div className="flex">
               <div className="flex items-center shrink-0">
                 <Link href="/">
-                  {/* <ApplicationLogo className="block w-auto text-gray-800 fill-current h-9 dark:text-gray-200" /> */}
-
                   <img
                     className="w-auto h-10 m-auto rounded-full"
                     src="/images/logo.jpeg"

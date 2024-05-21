@@ -13,6 +13,9 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\File\File;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class DocumentController extends Controller
 {
@@ -23,15 +26,35 @@ class DocumentController extends Controller
   {
 
     $doc_type = $request->query('type');
-    $documents = Document::where('doc_type', $doc_type)->get();
+    $documents = Document::where('doc_type', $doc_type)->latest()->get();
 
     foreach ($documents as $document) {
       $document->instance_name = $document->instance->name;
     }
 
+    $unique = $documents->unique('from');
+    $summary = $unique->map(function ($item) use ($documents) {
+      $total = $documents->where('from', $item->from)->count();
+      $corrective_action = $documents->where('from', $item->from)->whereNotNull('corrective_action');
+      $corrective_action_count = $corrective_action->count();
+      $corrective_action_last = $corrective_action->last();
+      $next_action_count = $documents->where('from', $item->from)->whereNotNull('next_action')->count();
+      return [
+        'from' => $item->from,
+        'subject' => $item->subject,
+        'total' => $total,
+        'corrective_action_count' => $corrective_action_count,
+        'next_action_count' => $next_action_count,
+        'corrective_action_last_date' => $corrective_action_last ? $corrective_action_last->created_at : null,
+      ];
+    });
+
+
+
     return Inertia::render('Documents/Index', [
       'documents' => $documents,
       'doc_type' => $doc_type,
+      'summary' => $summary,
     ]);
   }
 
@@ -52,9 +75,9 @@ class DocumentController extends Controller
   public function store(StoreDocumentRequest $request)
   {
     $valid = $request->validated();
+
     $valid['issue_date'] = date('Y-m-d H:i:s', strtotime($valid['issue_date']));
     $valid['verification_date'] =  date('Y-m-d H:i:s', strtotime($valid['verification_date']));
-
 
     if ($request->hasFile('file')) {
       $res = $request->file->store('public/documents');
@@ -154,80 +177,88 @@ class DocumentController extends Controller
 
   public function import(Request $request)
   {
-    $request->validate([
-      'xlsx' => 'required|mimes:xlsx,xls',
-      'doc_type' => 'required|string',
-    ]);
+    try {
 
-    $file = $request->file('xlsx');
-    $fileName = time() . '_' . $file->getClientOriginalName();
-    $file->storeAs('public/documents/imports', $fileName);
-    if (!file_exists(storage_path('app/public/documents/imports/' . $fileName))) {
-      session()->flash('error', 'Failed to import documents');
-      return redirect()->back();
-    }
+      $request->validate([
+        'xlsx' => 'required|mimes:xlsx,xls',
+        'doc_type' => 'required|string',
+      ]);
 
-    $spreadsheet = IOFactory::load(storage_path('app/public/documents/imports/' . $fileName));
-    $sheetData = $spreadsheet->getActiveSheet()->toArray();
+      $file = $request->file('xlsx');
+      $fileName = time() . '_' . $file->getClientOriginalName();
+      $file->storeAs('public/documents/imports', $fileName);
+      if (!file_exists(storage_path('app/public/documents/imports/' . $fileName))) {
+        session()->flash('error', 'Failed to import documents');
+        return redirect()->back();
+      }
 
-    for ($i = 0; $i < 3; $i++) {
-      array_shift($sheetData);
-    }
+      $spreadsheet = IOFactory::load(storage_path('app/public/documents/imports/' . $fileName));
+      $sheetData = $spreadsheet->getActiveSheet()->toArray();
 
-    $count = 0;
+      for ($i = 0; $i < 3; $i++) {
+        array_shift($sheetData);
+      }
 
-    foreach ($sheetData as $key => $value) {
-      if (
-        $key > 0
-      ) {
-        $number  = $value[1];
-        $from = isset($value[2]) ? $value[2] : null;
-        $subject = $value[3];
-        $instance_id = $value[4];
+      $count = 0;
+      $latest = Instance::latest()->first();
 
-        if ($instance_id === null) {
-          $instance_id = 1;
-        } else {
-          $instance = Instance::where('name', $instance_id)->first();
-          if ($instance !== null) {
-            $instance_id = $instance->id;
+      foreach ($sheetData as $key => $value) {
+        if (
+          $key > 0
+        ) {
+          $number  = $value[1];
+          $from = $value[2];
+          $subject = $value[3];
+          $instance_name = $value[4];
+          $instance_id = 2;
+          if ($instance_name === null) {
+            $instance_id = $latest->id;
           } else {
-            $instance_id = 1;
+            $instance = Instance::where('name', 'like', '%' . $instance_name . '%')->first();
+            if ($instance) {
+              $instance_id = $instance->id;
+            } else {
+              $instance_id = $latest->id;
+            }
+          }
+
+          $next_action  = $value[5];
+          $corrective_action = $value[6];
+          $issue_date  = $value[7] !== null && (strtotime($value[7])) ? date('Y-m-d', strtotime($value[7])) : null;
+          $issue_time  =  $value[8] !== null && (strtotime($value[8])) ? date('H:i:s', strtotime($value[8])) : null;
+
+          $verification_date = $value[9] !== null && (strtotime($value[9])) ? date('Y-m-d', strtotime($value[9])) : null;
+          $verification_time  =  $value[10] !== null && (strtotime($value[10])) ? date('H:i:s', strtotime($value[10])) : null;
+          $description  = $value[11];
+          $phone = $value[12];
+
+          if ($from !== null) {
+            Document::create([
+              'user_id' => auth()->id(),
+              'number' => $number,
+              'from' => $from,
+              'subject' => $subject,
+              'instance_id' => $instance_id,
+              'doc_type' => $request->doc_type,
+              'next_action' => $next_action,
+              'corrective_action' => $corrective_action,
+              'issue_date' => $issue_date . ' ' . $issue_time,
+              'verification_date' => $verification_date . ' ' . $verification_time,
+              'description' => $description,
+              'phone' => $phone,
+            ]);
+            $count++;
           }
         }
-
-        $next_action  = $value[5];
-        $corrective_action = $value[6];
-        $issue_date  = $value[7] !== null && (strtotime($value[7])) ? date('Y-m-d', strtotime($value[7])) : null;
-        $issue_time  =  $value[8] !== null && (strtotime($value[8])) ? date('H:i:s', strtotime($value[8])) : null;
-
-        $verification_date = $value[9] !== null && (strtotime($value[9])) ? date('Y-m-d', strtotime($value[9])) : null;
-        $verification_time  =  $value[10] !== null && (strtotime($value[10])) ? date('H:i:s', strtotime($value[10])) : null;
-        $description  = $value[11];
-        $phone = $value[12];
-
-        if ($from !== null) {
-          Document::create([
-            'user_id' => auth()->id(),
-            'number' => $number,
-            'from' => $from,
-            'subject' => $subject,
-            'instance_id' => $instance_id,
-            'doc_type' => $request->doc_type,
-            'next_action' => $next_action,
-            'corrective_action' => $corrective_action,
-            'issue_date' => $issue_date . ' ' . $issue_time,
-            'verification_date' => $verification_date . ' ' . $verification_time,
-            'description' => $description,
-            'phone' => $phone,
-          ]);
-          $count++;
-        }
       }
-    }
 
-    session()->flash('success', $count . ' ' . $request->type . ' documents imported successfully');
-    return redirect()->back();
+      session()->flash('success', $count . ' ' . $request->type . ' documents imported successfully');
+      return redirect()->route('documents.index', [
+        'type' => $request->doc_type,
+      ]);
+    } catch (\Throwable $th) {
+      Log::alert("IMPORT DOC ERR" . $th);
+    }
   }
   public function export()
   {
@@ -241,9 +272,18 @@ class DocumentController extends Controller
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
 
+    $sheet->getColumnDimension('A')->setWidth(7);
+    $sheet->getColumnDimension('C')->setWidth(30);
+    $sheet->getColumnDImension('D')->setWidth(70);
+    $sheet->getColumnDimension('E')->setWidth(40);
+    $sheet->getColumnDimension('F')->setWidth(50);
+    $sheet->getColumnDimension('G')->setWidth(50);
+    $sheet->getColumnDimension('H')->setWidth(25);
+    $sheet->getColumnDimension('I')->setWidth(25);
+    $sheet->getColumnDimension('J')->setWidth(25);
+    $sheet->getColumnDimension('K')->setWidth(20);
 
-
-    $sheet->setCellValue('A1', 'Nomor');
+    $sheet->setCellValue('A1', 'No.');
     $sheet->setCellValue('B1', 'Kantor');
     $sheet->setCellValue('C1', 'Pemohon');
     $sheet->setCellValue('D1', 'Perizinan');
@@ -254,6 +294,34 @@ class DocumentController extends Controller
     $sheet->setCellValue('I1', 'Tanggal Verifikasi');
     $sheet->setCellValue('J1', 'Keterangan');
     $sheet->setCellValue('K1', 'Telepon');
+
+    $headerStyle = [
+      'font' => [
+        'bold' => true,
+        'size' => 14,
+        'color' => [
+          'rgb' => 'FFFFFF'
+        ]
+      ],
+      'alignment' => [
+        'horizontal' => Alignment::HORIZONTAL_CENTER,
+        'vertical' => Alignment::VERTICAL_CENTER,
+      ],
+      'fill' => [
+        'fillType' => Fill::FILL_SOLID,
+        'startColor' => [
+          'argb' => 'FF137553',
+        ],
+      ],
+      'borders' => [
+        'allBorders' => [
+          'borderStyle' => Border::BORDER_THIN,
+          'color' => ['argb' => 'FF000000'],
+        ],
+      ],
+    ];
+    $sheet->getStyle('A1:K1')->applyFromArray($headerStyle);
+    $sheet->getRowDimension('1')->setRowHeight(30);
 
     $row = 2;
     foreach ($documents as $document) {
@@ -268,6 +336,19 @@ class DocumentController extends Controller
       $sheet->setCellValue('I' . $row, $document->verification_date);
       $sheet->setCellValue('J' . $row, $document->description);
       $sheet->setCellValue('K' . $row, $document->phone);
+
+      $borderStyle = [
+        'borders' => [
+          'allBorders' => [
+            'borderStyle' => Border::BORDER_THIN,
+            'color' => ['argb' => 'FF000000'],
+          ],
+        ],
+      ];
+
+      $sheet->getStyle('A' . $row . ':K' . $row)->applyFromArray($borderStyle);
+      $sheet->getStyle('A' . $row . ':B' . $row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
       $row++;
     }
 

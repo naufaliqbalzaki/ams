@@ -6,35 +6,28 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSPreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class ReportController extends Controller
 {
   public function index()
   {
-    $approved_subjects = DB::table('documents')
-      ->select('subject', DB::raw('count(*) as approved_total'))
-      ->whereNotNull('corrective_action')
+    $subjects = DB::table('documents')
+      ->select('subject', DB::raw('count(corrective_action) as approved_total'), DB::raw('count(next_action) as corrective_total'))
       ->groupBy('subject')
       ->get();
 
-    $correction_subjects = DB::table('documents')
-      ->select('subject', DB::raw('count(*) as corrective_total'))
-      ->whereNotNull('next_action')
-      ->groupBy('subject')
-      ->get();
-
-    $subjects = $approved_subjects->merge($correction_subjects);
-    $subjects = array_map(function ($subject) use ($approved_subjects, $correction_subjects) {
-      $approved = $approved_subjects->firstWhere('subject', $subject->subject);
-      $correction = $correction_subjects->firstWhere('subject', $subject->subject);
-
+    $subjects = array_map(function ($subject) {
       return [
         'subject' => $subject->subject,
-        'approved_total' => $approved ? $approved->approved_total : 0,
-        'corrective_total' => $correction ? $correction->corrective_total : 0,
-        'total' => ($approved ? $approved->approved_total : 0) + ($correction ? $correction->corrective_total : 0),
+        'approved_total' => $subject->approved_total,
+        'corrective_total' => $subject->corrective_total,
+        'total' => $subject->approved_total + $subject->corrective_total,
       ];
     }, $subjects->toArray());
+
 
     return Inertia::render('Reports/Index', [
       'subjects' => $subjects,
@@ -43,47 +36,110 @@ class ReportController extends Controller
 
   public function download()
   {
-    $approved_subjects = DB::table('documents')
-      ->select('subject', DB::raw('count(*) as approved_total'))
-      ->whereNotNull('corrective_action')
+    $subjects = DB::table('documents')
+      ->select('subject', DB::raw('count(corrective_action) as approved_total'), DB::raw('count(next_action) as corrective_total'))
       ->groupBy('subject')
       ->get();
-
-    $correction_subjects = DB::table('documents')
-      ->select('subject', DB::raw('count(*) as corrective_total'))
-      ->whereNotNull('next_action')
-      ->groupBy('subject')
-      ->get();
-
-    $subjects = $approved_subjects->merge($correction_subjects);
-    $subjects = array_map(function ($subject) use ($approved_subjects, $correction_subjects) {
-      $approved = $approved_subjects->firstWhere('subject', $subject->subject);
-      $correction = $correction_subjects->firstWhere('subject', $subject->subject);
-
-      return [
-        'subject' => $subject->subject,
-        'approved_total' => $approved ? $approved->approved_total : 0,
-        'corrective_total' => $correction ? $correction->corrective_total : 0,
-        'total' => ($approved ? $approved->approved_total : 0) + ($correction ? $correction->corrective_total : 0),
-      ];
-    }, $subjects->toArray());
-
 
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
-    $sheet->setCellValue('A1', 'Perizinan');
-    $sheet->setCellValue('B1', 'Disetujui');
-    $sheet->setCellValue('C1', 'Ditolak');
-    $sheet->setCellValue('D1', 'Total');
+
+    $sheet->getColumnDimension('A')->setWidth(7);
+    $sheet->getColumnDimension('B')->setWidth(70);
+    $sheet->getColumnDimension('C')->setWidth(15);
+    $sheet->getColumnDimension('D')->setWidth(15);
+    $sheet->getColumnDimension('E')->setWidth(15);
+
+    $sheet->setCellValue('A1', 'No.');
+    $sheet->setCellValue('B1', 'Perizinan');
+    $sheet->setCellValue('C1', 'Disetujui');
+    $sheet->setCellValue('D1', 'Ditolak');
+    $sheet->setCellValue('E1', 'Total');
+
+    $headerStyle = [
+      'font' => [
+        'bold' => true,
+        'size' => 14,
+        'color' => [
+          'rgb' => 'FFFFFF'
+        ]
+      ],
+      'alignment' => [
+        'horizontal' => Alignment::HORIZONTAL_CENTER,
+        'vertical' => Alignment::VERTICAL_CENTER,
+      ],
+      'fill' => [
+        'fillType' => Fill::FILL_SOLID,
+        'startColor' => [
+          'argb' => 'FF137553',
+        ],
+      ],
+      'borders' => [
+        'allBorders' => [
+          'borderStyle' => Border::BORDER_THIN,
+          'color' => ['argb' => 'FF000000'],
+        ],
+      ],
+    ];
+    $sheet->getStyle('A1:E1')->applyFromArray($headerStyle);
+    $sheet->getRowDimension('1')->setRowHeight(30);
 
     $row = 2;
-    foreach ($subjects as $subject) {
-      $sheet->setCellValue('A' . $row, $subject['subject']);
-      $sheet->setCellValue('B' . $row, $subject['approved_total']);
-      $sheet->setCellValue('C' . $row, $subject['corrective_total']);
-      $sheet->setCellValue('D' . $row, $subject['total']);
+    foreach ($subjects as $index => $subject) {
+      $sheet->setCellValue('A' . $row, $index + 1);
+      $sheet->setCellValue('B' . $row, $subject->subject);
+      $sheet->setCellValue('C' . $row, $subject->approved_total);
+      $sheet->setCellValue('D' . $row, $subject->corrective_total);
+      $sheet->setCellValue('E' . $row, ($subject->approved_total + $subject->corrective_total));
+
+      $borderStyle = [
+        'borders' => [
+          'allBorders' => [
+            'borderStyle' => Border::BORDER_THIN,
+            'color' => ['argb' => 'FF000000'],
+          ],
+        ],
+      ];
+
+      $sheet->getStyle('A' . $row . ':E' . $row)->applyFromArray($borderStyle);
+      $sheet->getStyle('A' . $row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
       $row++;
     }
+
+
+    $sheet->mergeCells('A' . $row . ':B' . $row);
+    $sheet->setCellValue('A' . $row, 'Total');
+    $sheet->setCellValue('C' . $row, '=SUM(C2:C' . ($row - 1) . ')');
+    $sheet->setCellValue('D' . $row, '=SUM(D2:D' . ($row - 1) . ')');
+    $sheet->setCellValue('E' . $row, '=SUM(E2:E' . ($row - 1) . ')');
+
+    $rowStyle = [
+      'font' => [
+        'bold' => true,
+        'color' => [
+          'rgb' => 'FFFFFF'
+        ]
+      ],
+      'alignment' => [
+        'horizontal' => Alignment::HORIZONTAL_CENTER,
+        'vertical' => Alignment::VERTICAL_CENTER,
+      ],
+      'fill' => [
+        'fillType' => Fill::FILL_SOLID,
+        'startColor' => [
+          'rgb' => '09597F',
+        ],
+      ],
+      'borders' => [
+        'allBorders' => [
+          'borderStyle' => Border::BORDER_THIN,
+          'color' => ['argb' => 'FF000000'],
+        ],
+      ],
+    ];
+    $sheet->getStyle('A' . $row . ':E' . $row)->applyFromArray($rowStyle);
+    $sheet->getStyle('A' . $row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
     $writer = new Xlsx($spreadsheet);
     $fileName = 'report-' . date('Y-m-d-H-i-s') . '.xlsx';

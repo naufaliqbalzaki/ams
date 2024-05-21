@@ -33,9 +33,9 @@ export interface Document {
   subject: string
   file: string | File
   phone: string
-  next_action: string
-  corrective_action: string
-  description: string
+  next_action?: string
+  corrective_action?: string
+  description?: string
   created_at: string
   updated_at: string
   _method?: 'post' | 'put'

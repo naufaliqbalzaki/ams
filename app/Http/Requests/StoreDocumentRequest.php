@@ -36,9 +36,9 @@ class StoreDocumentRequest extends FormRequest
         'file',
       ],
       'phone' => ['required', 'string'],
-      'next_action' => ['required', 'string'],
-      'corrective_action' => ['required', 'string'],
-      'description' => ['required', 'string'],
+      'next_action' => ['nullable', 'string'],
+      'corrective_action' => ['nullable', 'string'],
+      'description' => ['nullable', 'string'],
     ];
   }
 }

@@ -7,48 +7,48 @@ volumes:
     driver: local
 
 services:
-  nginx:
-    build:
-      context: ./docker
-      dockerfile: nginx.dockerfile
-      args:
-        - UID=${UID:-1000}
-        - GID=${GID:-1000}
-        - USER=${USER:-laravel}
-    restart: unless-stopped
-    container_name: nginx
-    ports:
-      - 8000:8000
-    volumes:
-      - .:/var/www/html
-      - .env:/var/www/html/.env
-    depends_on:
-      - php
-      - mysql
-      # - redis
-      # - laravel-queue
-      # - laravel-cron
-      # - phpmyadmin
-      # - mailhog
-    networks:
-      - laravel
+  # nginx:
+  #   build:
+  #     context: ./docker
+  #     dockerfile: nginx.dockerfile
+  #     args:
+  #       - UID=${UID:-1000}
+  #       - GID=${GID:-1000}
+  #       - USER=${USER:-laravel}
+  #   restart: unless-stopped
+  #   container_name: nginx
+  #   ports:
+  #     - 8000:8000
+  #   volumes:
+  #     - .:/var/www/html
+  #     - .env:/var/www/html/.env
+  #   depends_on:
+  #     - php
+  #     - mysql
+  #     # - redis
+  #     # - laravel-queue
+  #     # - laravel-cron
+  #     # - phpmyadmin
+  #     # - mailhog
+  #   networks:
+  #     - laravel
 
-  php:
-    build:
-      context: ./docker
-      dockerfile: php.dockerfile
-      args:
-        - UID=${UID:-1000}
-        - GID=${GID:-1000}
-        - USER=${USER:-laravel}
-    container_name: php
-    ports:
-      - ':9000'
-    volumes:
-      - .:/var/www/html
-      - .env:/var/www/html/.env
-    networks:
-      - laravel
+  # php:
+  #   build:
+  #     context: ./docker
+  #     dockerfile: php.dockerfile
+  #     args:
+  #       - UID=${UID:-1000}
+  #       - GID=${GID:-1000}
+  #       - USER=${USER:-laravel}
+  #   container_name: php
+  #   ports:
+  #     - ':9000'
+  #   volumes:
+  #     - .:/var/www/html
+  #     - .env:/var/www/html/.env
+  #   networks:
+  #     - laravel
 
   mysql:
     image: 'mysql/mysql-server:8.0'

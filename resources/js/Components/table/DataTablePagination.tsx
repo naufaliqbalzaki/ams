@@ -17,19 +17,25 @@ import {
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>
+  name?: 'documents' | 'instances' | 'reports'
   pageSizeOptions: number[]
 }
 
 export function DataTablePagination<TData>({
   table,
+  name,
   pageSizeOptions
 }: DataTablePaginationProps<TData>) {
   return (
     <div className="flex items-center justify-between px-2">
-      <div className="flex-1 text-sm text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} of{' '}
-        {table.getFilteredRowModel().rows.length} baris terpilih.
-      </div>
+      {name !== 'reports' ? (
+        <div className="flex-1 text-sm text-muted-foreground">
+          {table.getFilteredSelectedRowModel().rows.length} of{' '}
+          {table.getFilteredRowModel().rows.length} baris terpilih.
+        </div>
+      ) : (
+        <div className="flex-1 text-sm text-muted-foreground"></div>
+      )}
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
           <p className="text-sm font-medium">Baris per halaman</p>

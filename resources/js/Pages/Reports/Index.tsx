@@ -53,6 +53,7 @@ export default function ReportIndexPage({
         <DataTable
           columns={columns}
           data={subjects}
+          name="reports"
           searchParam="subject"
           pageSizeOptions={[50, 100, 200, 500]}
         />

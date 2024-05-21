@@ -21,7 +21,11 @@ import { cn } from '@/lib/utils'
 import { Document, Instance } from '@/types'
 import { useForm } from '@inertiajs/react'
 import { CalendarIcon } from '@radix-ui/react-icons'
-import { ChangeEventHandler, FormEventHandler } from 'react'
+import {
+  ChangeEventHandler,
+  FormEventHandler,
+  useEffect
+} from 'react'
 
 export const DocumentForm = ({
   userId,
@@ -66,6 +70,7 @@ export const DocumentForm = ({
 
   const submit: FormEventHandler = (e) => {
     e.preventDefault()
+    setData('doc_type', docType)
     if (document && document.id) {
       data._method = 'put'
       post(route('documents.update', document.id), {
@@ -80,7 +85,24 @@ export const DocumentForm = ({
       post(route('documents.store'))
     }
   }
-
+  useEffect(() => {
+    if (document) {
+      setData('instance_id', document.instance_id)
+      setData('number', document.number)
+      setData('doc_type', document.doc_type)
+      setData('issue_date', document.issue_date)
+      setData('verification_date', document.verification_date)
+      setData('from', document.from)
+      setData('subject', document.subject)
+      setData('file', document.file)
+      setData('phone', document.phone)
+      setData('next_action', document.next_action)
+      setData('corrective_action', document.corrective_action)
+      setData('description', document.description)
+    } else {
+      setData('doc_type', docType)
+    }
+  }, [setData])
   const handleFileChange: ChangeEventHandler<HTMLInputElement> = (
     e
   ) => {
@@ -128,6 +150,7 @@ export const DocumentForm = ({
 
         <InputError message={errors.number} className="mt-2" />
       </div>
+
       <div className="flex items-center gap-4 mt-4">
         <Label htmlFor="issue_date">Tanggal Terbit</Label>
         <Popover>

@@ -53,7 +53,7 @@ export default function Login({
 
   return (
     <GuestLayout>
-      <Head title="Log in" />
+      <Head title="Masuk" />
 
       {status && (
         <div className="mb-4 text-sm font-medium text-green-600">
@@ -63,10 +63,9 @@ export default function Login({
 
       <Card className="w-[400px] mx-auto">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">Log in</CardTitle>
+          <CardTitle className="text-2xl font-bold">Masuk</CardTitle>
           <CardDescription>
-            This is a secure area of the application. Please confirm
-            your password before continuing.
+            Silahkan masuk untuk mengakses aplikasi ini.
           </CardDescription>
         </CardHeader>
         <Separator className="mb-4" />
@@ -91,7 +90,7 @@ export default function Login({
               />
             </div>
             <div className="mt-4">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Kata sandi</Label>
 
               <Input
                 id="password"
@@ -118,7 +117,7 @@ export default function Login({
                   }
                 />
                 <span className="text-sm text-gray-600 ms-2 dark:text-gray-400">
-                  Remember me
+                  Ingat saya
                 </span>
               </label>{' '}
               {canResetPassword && (
@@ -126,23 +125,23 @@ export default function Login({
                   href={route('password.request')}
                   className="text-sm text-gray-600 underline rounded-md dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                 >
-                  Forgot your password?
+                  Lupa kata sandi?
                 </Link>
               )}
             </div>
             <div className="flex items-center justify-end mt-4">
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Don't have an account?{' '}
+                Belum punya akun?{' '}
                 <Link
                   href={route('register')}
                   className="text-sm text-blue-600 underline "
                 >
-                  Register
+                  Daftar sekarang
                 </Link>
               </p>
             </div>
             <Button className="w-full mt-4" disabled={processing}>
-              Log in
+              Masuk
             </Button>
           </form>
         </CardContent>

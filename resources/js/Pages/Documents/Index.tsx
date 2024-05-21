@@ -2,6 +2,12 @@ import { DataTable } from '@/Components/table/DataTable'
 import { DataTableRowActions } from '@/Components/table/DataTableRowActions'
 import { Button } from '@/Components/ui/button'
 import { Checkbox } from '@/Components/ui/checkbox'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from '@/Components/ui/tabs'
 import Authenticated from '@/Layouts/AuthenticatedLayout'
 import { Document, PageProps } from '@/types'
 import { Head, router } from '@inertiajs/react'
@@ -11,7 +17,7 @@ import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { ImportForm } from './_import_form'
 
-function generateColumn({
+function generateAllColumn({
   appUrl
 }: {
   appUrl: string
@@ -49,7 +55,19 @@ function generateColumn({
     },
     {
       accessorKey: 'from',
-      header: 'Pemohon'
+      header: 'Pemohon',
+      cell(props) {
+        const text: string = props.getValue()
+        if (text.length > 20) {
+          return text.slice(0, 20) + '...'
+        } else {
+          return text
+        }
+      }
+    },
+    {
+      accessorKey: 'phone',
+      header: 'Telepon'
     },
     {
       accessorKey: 'instance_name',
@@ -57,23 +75,45 @@ function generateColumn({
     },
     {
       accessorKey: 'subject',
-      header: 'Perizinan'
+      header: 'Perizinan',
+      cell(props) {
+        const text: string = props.getValue()
+        if (text.length > 20) {
+          return text.slice(0, 20) + '...'
+        } else {
+          return text
+        }
+      }
     },
     {
       accessorKey: 'description',
       header: 'Keterangan'
     },
     {
-      accessorKey: 'phone',
-      header: 'Telepon'
+      id: 'is_corrective',
+      header: 'Dikembalikan',
+      cell: ({ row }) => {
+        const status = row.original.corrective_action ? 'Ya' : 'Tidak'
+        return (
+          <div className="flex items-center justify-center">
+            <i
+              className={`text-${status === 'Ya' ? 'green' : 'red'}-500`}
+            >
+              {status}
+            </i>
+          </div>
+        )
+      }
     },
     {
       accessorKey: 'issue_date',
-      header: 'Tanggal Terbit'
+      header: 'Tanggal Terbit',
+      filterFn: 'dateRangeFilter'
     },
     {
       accessorKey: 'verification_date',
-      header: 'Tanggal Verifikasi'
+      header: 'Tanggal Verifikasi',
+      filterFn: 'dateRangeFilter'
     },
     {
       id: 'actions',
@@ -87,18 +127,66 @@ function generateColumn({
   ]
 }
 
+function generateSummaryColumn(): ColumnDef<any, any>[] {
+  return [
+    {
+      accessorKey: 'from',
+      header: 'Pemohon'
+    },
+    {
+      accessorKey: 'subject',
+      header: 'Perizinan'
+    },
+    {
+      accessorKey: 'corrective_action_count',
+      header: 'Dikembalikan',
+      cell(props) {
+        const data = props.getValue()
+        if (data === 0) {
+          return '-'
+        } else {
+          return data + ' kali'
+        }
+      }
+    },
+    {
+      accessorKey: 'corrective_action_last_date',
+      header: 'Tanggal Terakhir Perbaikan',
+      cell(props) {
+        const data = props.getValue()
+        if (data) {
+          const date = new Date(data)
+          // format to dd MMM yyyy HH:mm
+          return date.toLocaleString('id-ID', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          })
+        } else {
+          return '-'
+        }
+      }
+    }
+  ]
+}
+
 export default function DocumentsPage({
   appUrl,
   auth,
   doc_type,
   documents,
+  summary,
   flash
 }: PageProps & {
   documents: Document[]
   doc_type: string
+  summary: any
 }) {
   const [importOpen, setImportOpen] = useState(false)
-  const columns = generateColumn({ appUrl })
+  const allColumns = generateAllColumn({ appUrl })
+  const sumColumns = generateSummaryColumn()
 
   useEffect(() => {
     setImportOpen(false)
@@ -111,7 +199,12 @@ export default function DocumentsPage({
       toast.error(flash.error)
     }
   }, [flash])
-  const type = doc_type === 'central' ? 'Pusat' : 'Timur'
+  const doc_length = documents.length
+  const type =
+    doc_type === 'central'
+      ? ` Pusat (${doc_length})`
+      : ` Timur (${doc_length})`
+
   return (
     <Authenticated
       user={auth.user}
@@ -149,13 +242,32 @@ export default function DocumentsPage({
       <Head title={`Surat Masuk ${type}`} />
 
       <div className="px-8 pb-8 mx-auto max-w-7xl">
-        <DataTable
-          columns={columns}
-          data={documents}
-          name="documents"
-          doc_type="central"
-          searchParam="from"
-        />
+        <Tabs defaultValue="all">
+          <TabsList className="grid w-full grid-cols-2 mb-4">
+            <TabsTrigger value="all">Semua</TabsTrigger>
+            <TabsTrigger value="summary">Ringkasan</TabsTrigger>
+          </TabsList>
+          <TabsContent value="all">
+            <DataTable
+              columns={allColumns}
+              data={documents}
+              name="documents"
+              doc_type="central"
+              searchParam="from"
+            />
+          </TabsContent>
+          <TabsContent value="summary">
+            <DataTable
+              columns={sumColumns}
+              data={summary.filter(
+                (i: any) => i.corrective_action_count > 0
+              )}
+              name="documents"
+              doc_type="central"
+              searchParam="from"
+            />
+          </TabsContent>
+        </Tabs>
       </div>
     </Authenticated>
   )

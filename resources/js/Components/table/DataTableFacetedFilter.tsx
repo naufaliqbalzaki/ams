@@ -67,7 +67,7 @@ export function DataTableFacetedFilter<TData, TValue>({
         <Command>
           <CommandInput placeholder={title} />
           <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandEmpty>Data tidak ditemukan.</CommandEmpty>
             <CommandGroup></CommandGroup>
             {selectedValues.size > 0 && (
               <>

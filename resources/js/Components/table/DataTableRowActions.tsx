@@ -132,11 +132,25 @@ const DocumentDetail = ({
         {data.from}
       </p>
     </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 dark:bg-inherit">
+      <p className="font-medium min-w-32">No. Telepon</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.phone}
+      </p>
+    </TableRow>
     <TableRow className="flex items-center gap-2 p-2 hover:bg-inherit">
       <p className="font-medium min-w-32">Dinas</p>
       <p>
         <span className="mr-2">:</span>
         {data.instance_name}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
+      <p className="font-medium min-w-32">Perizinan</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.subject}
       </p>
     </TableRow>
     <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
@@ -154,6 +168,13 @@ const DocumentDetail = ({
       </p>
     </TableRow>
     <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
+      <p className="font-medium min-w-32">Keterangan</p>
+      <p>
+        <span className="mr-2">:</span>
+        {data.description}
+      </p>
+    </TableRow>
+    <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
       <p className="font-medium min-w-32">Tanggal Terbit</p>
       <p>
         <span className="mr-2">:</span>
@@ -165,20 +186,6 @@ const DocumentDetail = ({
       <p>
         <span className="mr-2">:</span>
         {data.verification_date}
-      </p>
-    </TableRow>
-    <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
-      <p className="font-medium min-w-32">Keterangan</p>
-      <p>
-        <span className="mr-2">:</span>
-        {data.description}
-      </p>
-    </TableRow>
-    <TableRow className="flex items-center gap-2 p-2 dark:bg-inherit">
-      <p className="font-medium min-w-32">No. Telepon</p>
-      <p>
-        <span className="mr-2">:</span>
-        {data.phone}
       </p>
     </TableRow>
     <TableRow className="flex items-center gap-2 p-2 mt-6 border-none justify-evenly dark:bg-inherit">

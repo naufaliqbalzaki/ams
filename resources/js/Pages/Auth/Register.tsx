@@ -19,7 +19,7 @@ export default function Register() {
   const { data, setData, post, processing, errors, reset } = useForm({
     name: '',
     username: '',
-    nip: '',
+    // nip: '',
     password: '',
     password_confirmation: ''
   })
@@ -47,9 +47,9 @@ export default function Register() {
         if (error.username) {
           toast.error(error.username)
         }
-        if (error.nip) {
-          toast.error(error.nip)
-        }
+        // if (error.nip) {
+        //   toast.error(error.nip)
+        // }
         if (error.password) {
           toast.error(error.password)
         }
@@ -59,28 +59,26 @@ export default function Register() {
       },
       onSuccess: () => {
         toast.dismiss()
-        toast.success('Account registered.')
+        toast.success('Akun berhasil dibuat!')
       }
     })
   }
 
   return (
     <GuestLayout>
-      <Head title="Register" />
+      <Head title="Daftar" />
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">
-            Register
-          </CardTitle>
+          <CardTitle className="text-2xl font-bold">Daftar</CardTitle>
           <CardDescription>
-            Please provide the following information to register.
+            Masukkan data diri anda untuk membuat akun baru.
           </CardDescription>
         </CardHeader>
         <Separator className="mb-4" />
         <CardContent>
           <form onSubmit={submit}>
             <div>
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">Nama</Label>
 
               <Input
                 id="name"
@@ -115,7 +113,7 @@ export default function Register() {
               />
             </div>
 
-            <div className="mt-4">
+            {/* <div className="mt-4">
               <Label htmlFor="nip">NIP</Label>
 
               <Input
@@ -130,10 +128,10 @@ export default function Register() {
               />
 
               <InputError message={errors.nip} className="mt-2" />
-            </div>
+            </div> */}
 
             <div className="mt-4">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Kata sandi</Label>
 
               <Input
                 id="password"
@@ -154,7 +152,7 @@ export default function Register() {
 
             <div className="mt-4">
               <Label htmlFor="password_confirmation">
-                Confirm Password
+                Konfirmasi kata sandi
               </Label>
 
               <Input
@@ -178,17 +176,17 @@ export default function Register() {
 
             <div className="flex items-center justify-end mt-4">
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Already have an account?{' '}
+                Sudah punya akun?{' '}
                 <Link
                   href={route('login')}
                   className="text-sm text-blue-600 underline "
                 >
-                  Log in
+                  Masuk
                 </Link>
               </p>
             </div>
             <Button className="w-full mt-4" disabled={processing}>
-              Register
+              Daftar
             </Button>
           </form>
         </CardContent>

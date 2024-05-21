@@ -1,5 +1,6 @@
 import Authenticated from '@/Layouts/AuthenticatedLayout'
 import { Instance, PageProps } from '@/types'
+import { Head } from '@inertiajs/react'
 import { useEffect, useState } from 'react'
 import { DocumentForm } from './_form'
 
@@ -15,11 +16,15 @@ export default function CreateDocumentPage({
 
   useEffect(() => {
     const nowUrl = new URL(window.location.href)
+    console.log('BASE URL:', nowUrl)
     const docTypeParam = nowUrl.searchParams.get('type')
+    console.log('PARAM:', docTypeParam)
     if (docTypeParam) {
       setType(docTypeParam)
     }
-  }, [docType])
+  }, [])
+
+  const type = docType === 'central' ? ' Pusat' : ' Timur'
 
   return (
     <Authenticated
@@ -28,11 +33,13 @@ export default function CreateDocumentPage({
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
             Buat Surat Masuk
-            {docType === 'central' ? ' Pusat' : ' Timur'}
+            {type}
           </h2>
         </div>
       }
     >
+      <Head title={`Buat Surat Masuk ${type}`} />
+
       <div className="px-8 mx-auto max-w-7xl">
         <DocumentForm
           userId={auth.user.id}
