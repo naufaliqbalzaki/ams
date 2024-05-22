@@ -218,7 +218,9 @@ class DocumentController extends Controller
             if ($instance) {
               $instance_id = $instance->id;
             } else {
-              $instance_id = $latest->id;
+              $instance = Instance::create([
+                'name' => $instance_name,
+              ]);
             }
           }
 

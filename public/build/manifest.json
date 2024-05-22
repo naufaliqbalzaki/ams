@@ -26,12 +26,16 @@
   "_GuestLayout-M3fF08JP.js": {
     "file": "assets/GuestLayout-M3fF08JP.js",
     "name": "GuestLayout",
-    "imports": ["resources/js/app.tsx"]
+    "imports": [
+      "resources/js/app.tsx"
+    ]
   },
   "_InputError-DiH5so8I.js": {
     "file": "assets/InputError-DiH5so8I.js",
     "name": "InputError",
-    "imports": ["resources/js/app.tsx"]
+    "imports": [
+      "resources/js/app.tsx"
+    ]
   },
   "_alert-dialog-B4WTZWnA.js": {
     "file": "assets/alert-dialog-B4WTZWnA.js",
@@ -46,12 +50,17 @@
   "_button-dMpf8Pr_.js": {
     "file": "assets/button-dMpf8Pr_.js",
     "name": "button",
-    "imports": ["resources/js/app.tsx"]
+    "imports": [
+      "resources/js/app.tsx"
+    ]
   },
   "_card-CF-UaKxq.js": {
     "file": "assets/card-CF-UaKxq.js",
     "name": "card",
-    "imports": ["resources/js/app.tsx", "_button-dMpf8Pr_.js"]
+    "imports": [
+      "resources/js/app.tsx",
+      "_button-dMpf8Pr_.js"
+    ]
   },
   "_checkbox-BLXWRiTg.js": {
     "file": "assets/checkbox-BLXWRiTg.js",
@@ -80,7 +89,10 @@
   "_index-CVAeVBQm.js": {
     "file": "assets/index-CVAeVBQm.js",
     "name": "index",
-    "imports": ["_button-dMpf8Pr_.js", "resources/js/app.tsx"]
+    "imports": [
+      "_button-dMpf8Pr_.js",
+      "resources/js/app.tsx"
+    ]
   },
   "_index-D3RA4NCA.js": {
     "file": "assets/index-D3RA4NCA.js",
@@ -104,7 +116,10 @@
   "_input-BA5B8DjG.js": {
     "file": "assets/input-BA5B8DjG.js",
     "name": "input",
-    "imports": ["resources/js/app.tsx", "_button-dMpf8Pr_.js"]
+    "imports": [
+      "resources/js/app.tsx",
+      "_button-dMpf8Pr_.js"
+    ]
   },
   "_label-DSBTQqsN.js": {
     "file": "assets/label-DSBTQqsN.js",
@@ -138,7 +153,9 @@
   "_transition-DTtn5U63.js": {
     "file": "assets/transition-DTtn5U63.js",
     "name": "transition",
-    "imports": ["resources/js/app.tsx"]
+    "imports": [
+      "resources/js/app.tsx"
+    ]
   },
   "resources/js/Pages/Auth/ConfirmPassword.tsx": {
     "file": "assets/ConfirmPassword-CnPRmRbw.js",
@@ -568,6 +585,8 @@
       "resources/js/Pages/Profile/Partials/UpdateProfileInformationForm.tsx",
       "resources/js/Pages/Reports/Index.tsx"
     ],
-    "css": ["assets/app-fwHgCanx.css"]
+    "css": [
+      "assets/app-fwHgCanx.css"
+    ]
   }
 }
