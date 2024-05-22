@@ -4,13 +4,8 @@ import { Button } from '@/Components/ui/button'
 import { Checkbox } from '@/Components/ui/checkbox'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Instance, PageProps } from '@/types'
-import { Head, Link, router } from '@inertiajs/react'
-import {
-  CaretSortIcon,
-  CheckCircledIcon,
-  CrossCircledIcon,
-  PlusIcon
-} from '@radix-ui/react-icons'
+import { Head, router } from '@inertiajs/react'
+import { CaretSortIcon, PlusIcon } from '@radix-ui/react-icons'
 import { ColumnDef } from '@tanstack/react-table'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
@@ -47,27 +42,27 @@ function generateColumn({
       enableSorting: false,
       enableHiding: false
     },
-    {
-      accessorKey: 'image',
-      header: 'Gambar',
-      cell: ({ row }) => {
-        const isPlaceholder = row.original.image
-          ?.toString()
-          .startsWith('https://via.placeholder')
-        const url = !isPlaceholder
-          ? appUrl + '/storage/instances/' + row.original.image
-          : 'https://placehold.jp/150x150.png'
-        return (
-          <div className="object-cover bg-contain">
-            <img
-              src={url}
-              alt={row.original.name}
-              className="object-cover object-center transition-all duration-300 h-28 rounded-xl w-28"
-            />
-          </div>
-        )
-      }
-    },
+    // {
+    //   accessorKey: 'image',
+    //   header: 'Gambar',
+    //   cell: ({ row }) => {
+    //     const isPlaceholder = row.original.image
+    //       ?.toString()
+    //       .startsWith('https://via.placeholder')
+    //     const url = !isPlaceholder
+    //       ? appUrl + '/storage/instances/' + row.original.image
+    //       : 'https://placehold.jp/150x150.png'
+    //     return (
+    //       <div className="object-cover bg-contain">
+    //         <img
+    //           src={url}
+    //           alt={row.original.name}
+    //           className="object-cover object-center transition-all duration-300 h-28 rounded-xl w-28"
+    //         />
+    //       </div>
+    //     )
+    //   }
+    // },
     {
       accessorKey: 'name',
       header({ column }) {
@@ -82,63 +77,55 @@ function generateColumn({
             <CaretSortIcon className="w-4 h-4 ml-2" />
           </Button>
         )
-      },
-      cell: ({ row }) => (
-        <Link
-          href={row.original.website}
-          className="text-blue-500 hover:underline"
-        >
-          {row.original.name}
-        </Link>
-      )
-    },
-    {
-      accessorKey: 'email',
-      header({ column }) {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() =>
-              column.toggleSorting(column.getIsSorted() === 'asc')
-            }
-          >
-            Email
-            <CaretSortIcon className="w-4 h-4 ml-2" />
-          </Button>
-        )
       }
     },
-    {
-      accessorKey: 'is_active',
-      header(props) {
-        return <div className="text-center">Aktif</div>
-      },
-      cell: ({ row }) => (
-        <div className="flex items-center justify-center">
-          {row.original.is_active ? (
-            <CheckCircledIcon className="w-5 h-5 text-green-500" />
-          ) : (
-            <CrossCircledIcon className="w-5 h-5 text-red-500" />
-          )}
-        </div>
-      )
-    },
-    {
-      accessorKey: 'created_at',
-      header: 'Dibuat pada',
-      cell: ({ row }) => (
-        <time dateTime={row.original.created_at}>
-          {new Date(row.original.created_at).toLocaleDateString(
-            'id-ID',
-            {
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric'
-            }
-          )}
-        </time>
-      )
-    },
+    // {
+    //   accessorKey: 'email',
+    //   header({ column }) {
+    //     return (
+    //       <Button
+    //         variant="ghost"
+    //         onClick={() =>
+    //           column.toggleSorting(column.getIsSorted() === 'asc')
+    //         }
+    //       >
+    //         Email
+    //         <CaretSortIcon className="w-4 h-4 ml-2" />
+    //       </Button>
+    //     )
+    //   }
+    // },
+    // {
+    //   accessorKey: 'is_active',
+    //   header(props) {
+    //     return <div className="text-center">Aktif</div>
+    //   },
+    //   cell: ({ row }) => (
+    //     <div className="flex items-center justify-center">
+    //       {row.original.is_active ? (
+    //         <CheckCircledIcon className="w-5 h-5 text-green-500" />
+    //       ) : (
+    //         <CrossCircledIcon className="w-5 h-5 text-red-500" />
+    //       )}
+    //     </div>
+    //   )
+    // },
+    // {
+    //   accessorKey: 'created_at',
+    //   header: 'Dibuat pada',
+    //   cell: ({ row }) => (
+    //     <time dateTime={row.original.created_at}>
+    //       {new Date(row.original.created_at).toLocaleDateString(
+    //         'id-ID',
+    //         {
+    //           day: 'numeric',
+    //           month: 'long',
+    //           year: 'numeric'
+    //         }
+    //       )}
+    //     </time>
+    //   )
+    // },
     {
       id: 'actions',
       header() {

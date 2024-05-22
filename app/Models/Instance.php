@@ -13,15 +13,15 @@ class Instance extends Model
   protected $fillable = [
     'parent_id',
     'name',
-    'is_active',
-    'website',
-    'email',
-    'image',
-    'address',
-    'district',
-    'city',
-    'province',
-    'postal_code'
+    // 'is_active',
+    // 'website',
+    // 'email',
+    // 'image',
+    // 'address',
+    // 'district',
+    // 'city',
+    // 'province',
+    // 'postal_code'
   ];
 
   public function parent()

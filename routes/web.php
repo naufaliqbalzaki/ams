@@ -20,8 +20,8 @@ Route::middleware('auth')->group(function () {
     $doc_central = Document::where('doc_type', 'central')->get();
     $doc_east = Document::where('doc_type', 'east')->get();
 
-    $instance_active = Instance::where('is_active', 1)->get();
-    $instance_inactive = Instance::where('is_active', 0)->get();
+    $instances  = Instance::latest()->get();
+    // $instance_inactive = Instance::where('is_active', 0)->get();
 
     $data = array(
       'doc_central' => [
@@ -35,15 +35,15 @@ Route::middleware('auth')->group(function () {
         'unit' => 'surat'
       ],
       'instance_active' => [
-        'name' => 'Dinas Aktif',
-        'data' => $instance_active,
+        'name' => 'Dinas',
+        'data' => $instances,
         'unit' => 'dinas'
       ],
-      'instance_inactive' => [
-        'name' => 'Dinas Tidak Aktif',
-        'data' => $instance_inactive,
-        'unit' => 'dinas'
-      ],
+      // 'instance_inactive' => [
+      //   'name' => 'Dinas Tidak Aktif',
+      //   'data' => $instance_inactive,
+      //   'unit' => 'dinas'
+      // ],
     );
     return Inertia::render('Dashboard', [
       'data' => $data

@@ -1,17 +1,10 @@
 import InputError from '@/Components/InputError'
 import { Button } from '@/Components/ui/button'
-import { Checkbox } from '@/Components/ui/checkbox'
 import { Input } from '@/Components/ui/input'
 import { Label } from '@/Components/ui/label'
-import { Separator } from '@/Components/ui/separator'
 import { Instance } from '@/types'
 import { useForm } from '@inertiajs/react'
-import {
-  ChangeEvent,
-  FormEventHandler,
-  useEffect,
-  useState
-} from 'react'
+import { FormEventHandler, useState } from 'react'
 
 export const InstanceForm = ({
   appUrl,
@@ -27,16 +20,16 @@ export const InstanceForm = ({
   const { data, setData, post, processing, errors } = useForm(
     instance || {
       name: '',
-      is_active: true,
-      kepsek: '',
-      website: '',
-      email: '',
-      image: null,
-      address: '',
-      district: '',
-      city: '',
-      province: '',
-      postal_code: '',
+      // is_active: true,
+      // kepsek: '',
+      // website: '',
+      // email: '',
+      // image: null,
+      // address: '',
+      // district: '',
+      // city: '',
+      // province: '',
+      // postal_code: '',
       _method: 'post'
     }
   )
@@ -54,23 +47,23 @@ export const InstanceForm = ({
     }
   }
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setData('image', e.target.files[0])
-      const reader = new FileReader()
-      reader.onload = () => {
-        setImage(reader.result)
-      }
-      reader.readAsDataURL(e.target.files[0])
-    }
-  }
+  // const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files) {
+  //     setData('image', e.target.files[0])
+  //     const reader = new FileReader()
+  //     reader.onload = () => {
+  //       setImage(reader.result)
+  //     }
+  //     reader.readAsDataURL(e.target.files[0])
+  //   }
+  // }
 
-  useEffect(() => {
-    if (instance && instance.image) {
-      const url = appUrl + '/storage/instances/' + instance.image
-      setImage(url)
-    }
-  }, [instance])
+  // useEffect(() => {
+  //   if (instance && instance.image) {
+  //     const url = appUrl + '/storage/instances/' + instance.image
+  //     setImage(url)
+  //   }
+  // }, [instance])
 
   return (
     <form onSubmit={submit}>
@@ -88,7 +81,7 @@ export const InstanceForm = ({
 
         <InputError message={errors.name} className="mt-2" />
       </div>
-      <div className="flex items-center gap-2 mt-4">
+      {/* <div className="flex items-center gap-2 mt-4">
         <Label htmlFor="is_active">Aktif ?</Label>
         <Checkbox
           id="is_active"
@@ -208,7 +201,7 @@ export const InstanceForm = ({
           autoComplete="additional-name"
           onChange={(e) => setData('postal_code', e.target.value)}
         />
-      </div>
+      </div> */}
       <div className="flex items-center justify-between mt-4">
         <Button
           type="submit"

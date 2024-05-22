@@ -210,7 +210,7 @@ const InstanceDetail = ({
         {data.name}
       </p>
     </TableRow>
-    <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
+    {/* <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
       <p className="font-medium min-w-32">Aktif</p>
       <p>
         <span className="mr-2">:</span>
@@ -258,7 +258,7 @@ const InstanceDetail = ({
         <span className="mr-2">:</span>
         {data.province}
       </p>
-    </TableRow>
+    </TableRow> */}
     <TableRow className="flex items-center gap-2 p-2 mt-6 border-none justify-evenly dark:bg-inherit">
       <DeleteDataDialog id={data.id} name={name} showText={true} />
       <EditDataLink id={data.id} name={name} showText={true} />

@@ -18,6 +18,8 @@ interface DataTableToolbarProps<TData> {
   name?: 'documents' | 'instances' | 'reports'
   doc_type?: 'central' | 'east'
   searchParam?: string
+  setGlobalFilter?: (filterValue: string) => void
+  globalFilter?: string
 }
 
 const ClearButton = ({
@@ -55,27 +57,36 @@ export function DataTableToolbar<TData>({
   table,
   name,
   doc_type,
-  searchParam
+  searchParam,
+  setGlobalFilter,
+  globalFilter
 }: DataTableToolbarProps<TData>) {
   const [issueDate, setIssueDate] = useState<DateRange | undefined>()
   const [verificationDate, setVerificationDate] = useState<
     DateRange | undefined
   >()
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-col items-start flex-1 space-x-0 space-y-4 md:space-y-0 md:space-x-8 md:items-center md:flex-row">
         <Input
-          placeholder={`Cari ${searchParam === 'from' ? 'pemohon' : 'nama'}`}
+          placeholder={`Cari ${searchParam === 'from' ? 'no/pemohon/dinas' : 'nama'}`}
           value={
-            (table
-              .getColumn(searchParam || '')
-              ?.getFilterValue() as string) ?? ''
+            (table.getColumn(searchParam || '')?.getFilterValue() as
+              | string
+              | undefined) ??
+            globalFilter ??
+            ''
           }
-          onChange={(event) =>
-            table
-              .getColumn(searchParam || '')
-              ?.setFilterValue(event.target.value)
-          }
+          onChange={(event) => {
+            if (name !== 'documents') {
+              table
+                .getColumn(searchParam || '')
+                ?.setFilterValue(event.target.value)
+            } else {
+              setGlobalFilter?.(event.target.value)
+            }
+          }}
           className="h-8 w-[150px] lg:w-[250px]"
         />
         {name === 'documents' && (

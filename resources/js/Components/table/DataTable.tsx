@@ -11,6 +11,7 @@ import {
   ColumnDef,
   ColumnFiltersState,
   FilterFn,
+  SortingFn,
   SortingState,
   VisibilityState,
   flexRender,
@@ -20,15 +21,26 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  sortingFns,
   useReactTable
 } from '@tanstack/react-table'
 import { useEffect, useState } from 'react'
 import { DataTablePagination } from './DataTablePagination'
 import { DataTableToolbar } from './DataTableToolbar'
 
+import {
+  RankingInfo,
+  compareItems,
+  rankItem
+} from '@tanstack/match-sorter-utils'
+
 declare module '@tanstack/table-core' {
   interface FilterFns {
+    fuzzy: FilterFn<unknown>
     dateRangeFilter: FilterFn<unknown>
+  }
+  interface FilterMeta {
+    itemRank: RankingInfo
   }
 }
 interface DataTableProps<TData, TValue> {
@@ -63,6 +75,34 @@ export const dateRangeFilter: FilterFn<any> = (
 }
 
 dateRangeFilter.autoRemove
+export const fuzzyFilter: FilterFn<any> = (
+  row,
+  columnId,
+  value,
+  addMeta
+) => {
+  const itemRank = rankItem(row.getValue(columnId), value)
+
+  addMeta({
+    itemRank
+  })
+
+  return itemRank.passed
+}
+export const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
+  let dir = 0
+
+  if (rowA.columnFiltersMeta[columnId]) {
+    dir = compareItems(
+      rowA.columnFiltersMeta[columnId]?.itemRank!,
+      rowB.columnFiltersMeta[columnId]?.itemRank!
+    )
+  }
+
+  return dir === 0
+    ? sortingFns.alphanumeric(rowA, rowB, columnId)
+    : dir
+}
 
 export function DataTable<TData, TValue>({
   columns,
@@ -79,6 +119,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] =
     useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
+  const [globalFilter, setGlobalFilter] = useState('')
 
   const table = useReactTable({
     data,
@@ -87,11 +128,15 @@ export function DataTable<TData, TValue>({
       sorting,
       columnVisibility,
       rowSelection,
-      columnFilters
+      columnFilters,
+      globalFilter
     },
     filterFns: {
-      dateRangeFilter: dateRangeFilter
+      dateRangeFilter: dateRangeFilter,
+      fuzzy: fuzzyFilter
     },
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: fuzzyFilter,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -127,6 +172,8 @@ export function DataTable<TData, TValue>({
           name={name}
           doc_type={doc_type}
           searchParam={searchParam}
+          setGlobalFilter={setGlobalFilter}
+          globalFilter={globalFilter}
         />
       )}
       <div className="border rounded-md">

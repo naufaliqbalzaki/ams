@@ -25,15 +25,15 @@ class StoreInstanceRequest extends FormRequest
     return [
       'parent_id' => ['nullable', 'integer'],
       'name' => ['required', 'string'],
-      'is_active' => ['required', 'boolean'],
-      'website' => ['nullable', 'string'],
-      'email' => ['required', 'email'],
-      'image' => ['nullable',  'image'],
-      'address' => ['required', 'string'],
-      'district' => ['required', 'string'],
-      'city' => ['required', 'string'],
-      'province' => ['required', 'string'],
-      'postal_code' => ['required', 'string']
+      // 'is_active' => ['required', 'boolean'],
+      // 'website' => ['nullable', 'string'],
+      // 'email' => ['required', 'email'],
+      // 'image' => ['nullable',  'image'],
+      // 'address' => ['required', 'string'],
+      // 'district' => ['required', 'string'],
+      // 'city' => ['required', 'string'],
+      // 'province' => ['required', 'string'],
+      // 'postal_code' => ['required', 'string']
     ];
   }
 }

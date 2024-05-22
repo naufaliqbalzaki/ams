@@ -45,16 +45,16 @@ export type Instance = {
   id: string | null
   parent_id: number | null
   name: string
-  is_active: boolean
-  kepsek: string
-  website: string
-  email: string
-  image?: File | string | null
-  address: string
-  district: string
-  city: string
-  province: string
-  postal_code: string
+  // is_active: boolean
+  // kepsek: string
+  // website: string
+  // email: string
+  // image?: File | string | null
+  // address: string
+  // district: string
+  // city: string
+  // province: string
+  // postal_code: string
   created_at: string
   updated_at: string
   _method?: 'post' | 'put'
