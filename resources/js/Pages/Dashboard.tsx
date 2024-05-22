@@ -12,9 +12,29 @@ import {
   FileTextIcon,
   SketchLogoIcon
 } from '@radix-ui/react-icons'
-import ReactApexChart, {
-  Props as ApexChartsProps
-} from 'react-apexcharts'
+import {
+  CategoryScale,
+  Chart as ChartJS,
+  ChartOptions,
+  Legend,
+  LineElement,
+  LinearScale,
+  PointElement,
+  Title,
+  Tooltip
+} from 'chart.js'
+import { Line } from 'react-chartjs-2'
+
+ChartJS.register(
+  LineElement,
+  PointElement,
+  LinearScale,
+  Title,
+  CategoryScale,
+  Tooltip,
+  Legend
+)
+
 const meta: Record<string, any> = {
   doc_central: {
     icon: <FileTextIcon className="w-4 h-4 text-muted-foreground" />
@@ -31,18 +51,28 @@ const meta: Record<string, any> = {
 }
 
 function randomColor() {
-  return [
-    `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-    `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-    `#${Math.floor(Math.random() * 16777215).toString(16)}`
-  ]
+  return `#${Math.floor(Math.random() * 16777215).toString(16)}`
 }
 
-function generateChart({ data }: { data: any }) {
+function generateChart({
+  data,
+  unit
+}: {
+  data: any
+  unit: 'surat' | 'dinas'
+}) {
+  const color = randomColor()
   let dates: any = []
   let groupedData: any = {}
   data.data.forEach((item: any) => {
-    const dateOnly = item.created_at.split('T')[0]
+    const dateOnly = new Date(item.created_at).toLocaleString(
+      'id-ID',
+      {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      }
+    )
 
     if (!dates.includes(dateOnly)) {
       dates.push(dateOnly)
@@ -54,60 +84,65 @@ function generateChart({ data }: { data: any }) {
     groupedData[dateOnly].push(item)
   })
 
-  const chartData: ApexChartsProps = {
-    type: 'area',
-    series: [
+  const chartData = {
+    labels: dates,
+    datasets: [
       {
-        name: `series2`,
-        data: Object.keys(groupedData).map((key) => {
-          return {
-            x: new Date(key).getTime(),
-            y: groupedData[key].length
-          }
-        })
+        label: unit.charAt(0).toUpperCase() + unit.slice(1),
+        data: Object.keys(groupedData).map((key) => ({
+          x: key,
+          y: groupedData[key].length
+        })),
+        backgroundColor: color,
+        borderColor: color
       }
-    ],
-    toolbar: {
-      show: false
+    ]
+  }
+
+  const options: ChartOptions<any> = {
+    responsive: true,
+
+    scales: {
+      x: {
+        time: {
+          unit: 'day'
+        },
+        grid: {
+          color: 'grey',
+          borderColor: 'grey',
+          tickColor: 'grey'
+        }
+      },
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Total'
+        },
+        ticks: {
+          precision: 0
+        },
+        grid: {
+          color: 'grey',
+          borderColor: 'grey',
+          tickColor: 'grey'
+        }
+      }
     },
-    options: {
-      chart: {
-        height: 200,
-        type: 'area',
-        toolbar: {
-          show: false
-        }
-      },
-      colors: randomColor(),
-      dataLabels: {
-        enabled: false
-      },
-      stroke: {
-        curve: 'smooth'
-      },
-      xaxis: {
-        type: 'datetime',
-        categories: dates
-      },
-      tooltip: {
-        x: {
-          format: 'dd/MM/yy HH:mm'
-        }
+    animations: {
+      tension: {
+        duration: 1000,
+        easing: 'linear',
+        from: 1,
+        to: 0,
+        loop: true
       }
     }
   }
 
-  return (
-    <>
-      <ReactApexChart
-        options={chartData.options}
-        series={chartData.series}
-        type="area"
-        height={200}
-      />
-    </>
-  )
+  return <Line data={chartData} options={options} height={200} />
 }
+
 export default function Dashboard({
   auth,
   data
@@ -137,10 +172,13 @@ export default function Dashboard({
                 {meta[key]?.icon && <>{meta[key].icon}</>}
               </CardHeader>
               <CardContent className="text-2xl font-semibold">
-                {generateChart({ data: data[key] })}
-                <h3 className="font-semibold ">
+                {generateChart({
+                  data: data[key],
+                  unit: data[key].unit
+                })}
+                <h3 className="mt-4 font-semibold">
                   {data[key].data.length}
-                  <span className="ml-2 font-normal text-gray-500 ">
+                  <span className="ml-2 font-normal text-gray-500">
                     {data[key].unit}
                   </span>
                 </h3>

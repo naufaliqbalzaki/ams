@@ -164,10 +164,10 @@ export const DocumentForm = ({
             >
               <CalendarIcon className="w-4 h-4 mr-2" />
               {data.issue_date ? (
-                `${data.issue_date.toLocaleString([], {
-                  year: 'numeric',
-                  month: 'numeric',
+                `${data.issue_date.toLocaleString('id-ID', {
                   day: 'numeric',
+                  month: 'short',
+                  year: 'numeric',
                   hour: '2-digit',
                   minute: '2-digit'
                 })}`
@@ -223,10 +223,10 @@ export const DocumentForm = ({
             >
               <CalendarIcon className="w-4 h-4 mr-2" />
               {data.verification_date ? (
-                `${data.verification_date.toLocaleString([], {
-                  year: 'numeric',
-                  month: 'numeric',
+                `${data.verification_date.toLocaleString('id-ID', {
                   day: 'numeric',
+                  month: 'short',
+                  year: 'numeric',
                   hour: '2-digit',
                   minute: '2-digit'
                 })}`

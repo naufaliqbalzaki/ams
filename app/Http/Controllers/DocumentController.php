@@ -47,7 +47,7 @@ class DocumentController extends Controller
         'next_action_count' => $next_action_count,
         'corrective_action_last_date' => $corrective_action_last ? $corrective_action_last->created_at : null,
       ];
-    });
+    })->toArray();
 
 
 

@@ -108,12 +108,32 @@ function generateAllColumn({
     {
       accessorKey: 'issue_date',
       header: 'Tanggal Terbit',
-      filterFn: 'dateRangeFilter'
+      filterFn: 'dateRangeFilter',
+      cell(props) {
+        const date = new Date(props.getValue())
+        return date.toLocaleString('id-ID', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
+      }
     },
     {
       accessorKey: 'verification_date',
       header: 'Tanggal Verifikasi',
-      filterFn: 'dateRangeFilter'
+      filterFn: 'dateRangeFilter',
+      cell(props) {
+        const date = new Date(props.getValue())
+        return date.toLocaleString('id-ID', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
+      }
     },
     {
       id: 'actions',
@@ -156,7 +176,6 @@ function generateSummaryColumn(): ColumnDef<any, any>[] {
         const data = props.getValue()
         if (data) {
           const date = new Date(data)
-          // format to dd MMM yyyy HH:mm
           return date.toLocaleString('id-ID', {
             day: 'numeric',
             month: 'short',
@@ -204,6 +223,10 @@ export default function DocumentsPage({
     doc_type === 'central'
       ? ` Pusat (${doc_length})`
       : ` Timur (${doc_length})`
+
+  if (typeof summary === 'object') {
+    summary = Object.keys(summary).map((key) => summary[key])
+  }
 
   return (
     <Authenticated

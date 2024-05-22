@@ -36,7 +36,22 @@ function generateColumn({
     },
     {
       accessorKey: 'created_at',
-      header: 'Tanggal Dibuat'
+      header: 'Tanggal Dibuat',
+      cell(props) {
+        const value = props.getValue()
+        const date = new Date(value)
+        return (
+          <span>
+            {date.toLocaleString('id-ID', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
+          </span>
+        )
+      }
     },
     {
       accessorKey: 'size',
