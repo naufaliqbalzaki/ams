@@ -26,16 +26,12 @@
   "_GuestLayout-r5Mk0vhG.js": {
     "file": "assets/GuestLayout-r5Mk0vhG.js",
     "name": "GuestLayout",
-    "imports": [
-      "resources/js/app.tsx"
-    ]
+    "imports": ["resources/js/app.tsx"]
   },
   "_InputError-BfTHJ5wo.js": {
     "file": "assets/InputError-BfTHJ5wo.js",
     "name": "InputError",
-    "imports": [
-      "resources/js/app.tsx"
-    ]
+    "imports": ["resources/js/app.tsx"]
   },
   "_alert-dialog-DS_lzblz.js": {
     "file": "assets/alert-dialog-DS_lzblz.js",
@@ -50,17 +46,12 @@
   "_button-DH7x16na.js": {
     "file": "assets/button-DH7x16na.js",
     "name": "button",
-    "imports": [
-      "resources/js/app.tsx"
-    ]
+    "imports": ["resources/js/app.tsx"]
   },
   "_card-CaHQo3MY.js": {
     "file": "assets/card-CaHQo3MY.js",
     "name": "card",
-    "imports": [
-      "resources/js/app.tsx",
-      "_button-DH7x16na.js"
-    ]
+    "imports": ["resources/js/app.tsx", "_button-DH7x16na.js"]
   },
   "_checkbox-Dz2qvE_X.js": {
     "file": "assets/checkbox-Dz2qvE_X.js",
@@ -108,18 +99,12 @@
   "_index-CxNQn363.js": {
     "file": "assets/index-CxNQn363.js",
     "name": "index",
-    "imports": [
-      "_button-DH7x16na.js",
-      "resources/js/app.tsx"
-    ]
+    "imports": ["_button-DH7x16na.js", "resources/js/app.tsx"]
   },
   "_input-BkKq4vFi.js": {
     "file": "assets/input-BkKq4vFi.js",
     "name": "input",
-    "imports": [
-      "resources/js/app.tsx",
-      "_button-DH7x16na.js"
-    ]
+    "imports": ["resources/js/app.tsx", "_button-DH7x16na.js"]
   },
   "_label-ATOVkcFi.js": {
     "file": "assets/label-ATOVkcFi.js",
@@ -153,9 +138,7 @@
   "_transition-C3mKxNNv.js": {
     "file": "assets/transition-C3mKxNNv.js",
     "name": "transition",
-    "imports": [
-      "resources/js/app.tsx"
-    ]
+    "imports": ["resources/js/app.tsx"]
   },
   "resources/js/Pages/Auth/ConfirmPassword.tsx": {
     "file": "assets/ConfirmPassword-BoLuXWoz.js",
@@ -585,8 +568,6 @@
       "resources/js/Pages/Profile/Partials/UpdateProfileInformationForm.tsx",
       "resources/js/Pages/Reports/Index.tsx"
     ],
-    "css": [
-      "assets/app-fwHgCanx.css"
-    ]
+    "css": ["assets/app-fwHgCanx.css"]
   }
 }

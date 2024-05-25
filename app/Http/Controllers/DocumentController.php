@@ -248,6 +248,7 @@ class DocumentController extends Controller
               'verification_date' => $verification_date . ' ' . $verification_time,
               'description' => $description,
               'phone' => $phone,
+              'petugas' => NULL,
             ]);
             $count++;
           }
