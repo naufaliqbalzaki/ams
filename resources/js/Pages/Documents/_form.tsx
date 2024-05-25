@@ -64,6 +64,7 @@ export const DocumentForm = ({
       next_action: '',
       corrective_action: '',
       description: '',
+      petugas: '',
       _method: 'post'
     }
   )
@@ -99,6 +100,7 @@ export const DocumentForm = ({
       setData('next_action', document.next_action)
       setData('corrective_action', document.corrective_action)
       setData('description', document.description)
+      setData('petugas', document.petugas)
     } else {
       setData('doc_type', docType)
     }
@@ -113,7 +115,9 @@ export const DocumentForm = ({
   return (
     <form onSubmit={submit}>
       <div>
-        <Label htmlFor="instance_id">Dinas</Label>
+        <Label htmlFor="instance_id" aria-required required>
+          Dinas
+        </Label>
         <Select
           value={data.instance_id}
           onValueChange={(val) => setData('instance_id', val)}
@@ -138,7 +142,9 @@ export const DocumentForm = ({
         <InputError message={errors.instance_id} className="mt-2" />
       </div>
       <div className="mt-4">
-        <Label htmlFor="number">No.</Label>
+        <Label htmlFor="number" aria-required required>
+          No.
+        </Label>
         <Input
           id="number"
           type="text"
@@ -152,7 +158,9 @@ export const DocumentForm = ({
       </div>
 
       <div className="flex items-center gap-4 mt-4">
-        <Label htmlFor="issue_date">Tanggal Terbit</Label>
+        <Label htmlFor="issue_date" aria-required required>
+          Tanggal Terbit
+        </Label>
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -211,7 +219,9 @@ export const DocumentForm = ({
         <InputError message={errors.issue_date} className="mt-2" />
       </div>
       <div className="flex items-center gap-4 mt-4">
-        <Label htmlFor="verification_date">Tanggal Verifikasi</Label>
+        <Label htmlFor="verification_date" aria-required required>
+          Tanggal Verifikasi
+        </Label>
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -273,7 +283,9 @@ export const DocumentForm = ({
         />
       </div>
       <div className="mt-4">
-        <Label htmlFor="from">Pemohon</Label>
+        <Label htmlFor="from" aria-required required>
+          Pemohon
+        </Label>
         <Input
           id="from"
           type="text"
@@ -286,7 +298,9 @@ export const DocumentForm = ({
         <InputError message={errors.from} className="mt-2" />
       </div>
       <div className="mt-4">
-        <Label htmlFor="subject">Perizinan</Label>
+        <Label htmlFor="subject" aria-required required>
+          Perizinan
+        </Label>
         <Textarea
           id="subject"
           name="subject"
@@ -311,7 +325,9 @@ export const DocumentForm = ({
         <InputError message={errors.file} className="mt-2" />
       </div>
       <div className="mt-4">
-        <Label htmlFor="phone">No. Telp</Label>
+        <Label htmlFor="phone" aria-required required>
+          No. Telp
+        </Label>
         <Input
           id="phone"
           type="text"
@@ -361,8 +377,22 @@ export const DocumentForm = ({
           className="block w-full mt-1"
           onChange={(e) => setData('description', e.target.value)}
         />
-
         <InputError message={errors.description} className="mt-2" />
+      </div>
+      <div className="mt-4">
+        <Label htmlFor="petugas" aria-required required>
+          Petugas
+        </Label>
+        <Input
+          id="petugas"
+          type="text"
+          name="petugas"
+          value={data.petugas}
+          className="block w-full mt-1"
+          onChange={(e) => setData('petugas', e.target.value)}
+        />
+
+        <InputError message={errors.petugas} className="mt-2" />
       </div>
       <div className="flex items-center justify-between mt-4">
         <Button

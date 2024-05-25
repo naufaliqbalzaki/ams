@@ -36,6 +36,7 @@ export interface Document {
   next_action?: string
   corrective_action?: string
   description?: string
+  petugas?: string
   created_at: string
   updated_at: string
   _method?: 'post' | 'put'

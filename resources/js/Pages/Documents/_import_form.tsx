@@ -69,7 +69,10 @@ export const ImportForm = ({
           <AlertDialogTitle>Import Documents (xlsx)</AlertDialogTitle>
           <AlertDialogDescription>
             Import dokumen menggunakan template yang telah disediakan.{' '}
-            <a href="#" className="text-blue-500">
+            <a
+              href={route('documents.download_template')}
+              className="text-blue-500"
+            >
               Unduh template
             </a>
           </AlertDialogDescription>

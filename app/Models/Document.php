@@ -24,6 +24,7 @@ class Document extends Model
     'next_action',
     'corrective_action',
     'description',
+    'petugas'
   ];
 
   public function user()

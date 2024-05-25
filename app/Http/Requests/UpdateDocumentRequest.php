@@ -43,6 +43,7 @@ class UpdateDocumentRequest extends FormRequest
       'next_action' => ['nullable', 'string'],
       'corrective_action' => ['nullable', 'string'],
       'description' => ['nullable', 'string'],
+      'petugas' => ['nullable', 'string']
     ];
   }
 }

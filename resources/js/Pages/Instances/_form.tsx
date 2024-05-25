@@ -68,7 +68,9 @@ export const InstanceForm = ({
   return (
     <form onSubmit={submit}>
       <div>
-        <Label htmlFor="name">Nama</Label>
+        <Label htmlFor="name" aria-required required>
+          Nama
+        </Label>
         <Input
           id="name"
           type="text"

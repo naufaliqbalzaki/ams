@@ -61,6 +61,7 @@ Route::middleware('auth')->group(function () {
   Route::post('/documents/import', [DocumentController::class, 'import'])->name('documents.import');
   Route::get('/documents/file/export', [DocumentController::class, 'export'])->name('documents.file.export');
   Route::post('/documents/destroy_batch', [DocumentController::class, 'destroyBatch'])->name('documents.destroy_batch');
+  Route::get('/download-template', [DocumentController::class, 'download_template'])->name('documents.download_template');
 
   Route::get('/backups', [BackupController::class, 'index'])->name('backups.index');
   Route::get('/backups/create', [BackupController::class, 'create'])->name('backups.create');

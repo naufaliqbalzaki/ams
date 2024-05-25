@@ -366,4 +366,10 @@ class DocumentController extends Controller
 
     return response()->download($filePath)->deleteFileAfterSend(true);
   }
+
+  public function download_template()
+  {
+    $localPath = storage_path('app/public/documents/template.xlsx');
+    return response()->download($localPath, 'template.xlsx');
+  }
 }
