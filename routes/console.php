@@ -11,12 +11,16 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote')->hourly();
 
 Schedule::call(function () {
+  if (!file_exists(storage_path() . "/db-backup")) {
+    mkdir(storage_path() . "/db-backup", 0777, true);
+  }
+
   $filename = 'backup-' . date('Y-m-d-H-i-s') . '.sql';
-  $command = 'mysqldump -u ' . env('DB_USERNAME') . ' -p' . env('DB_PASSWORD') . ' ' . env('DB_DATABASE') . ' > ' . storage_path('app/backup/') . $filename;
+  $path = storage_path() .  "/db-backup/" . $filename;
 
-  $returnVar = NULL;
-  $output  = NULL;
 
-  exec($command, $output, $returnVar);
+  $command = "mysqldump -u " . env('DB_USERNAME') . " -p " . env('DB_DATABASE') . " --password=" . env('DB_PASSWORD')    . " > " . $path;
+
+  exec($command);
   Log::channel('backup')->info('Backup created: ' . $filename);
-})->monthly();
+})->everySecond();
