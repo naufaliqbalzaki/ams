@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreInstanceRequest;
 use App\Http\Requests\UpdateInstanceRequest;
 use App\Models\Instance;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class InstanceController extends Controller
@@ -83,6 +84,20 @@ class InstanceController extends Controller
     $instance->update($valid);
 
     session()->flash('success', 'Berhasil mengubah data dinas');
+    return redirect()->route('instances.index');
+  }
+
+  public function destroyBatch(Request $request)
+  {
+    $ids = $request->input('ids');
+    $count  = count($ids);
+    foreach ($ids as $id) {
+      $instance = Instance::find($id);
+      if ($instance) {
+        $instance->delete();
+      }
+    }
+    session()->flash('success', 'Berhasil menghapus ' . $count . ' dinas');
     return redirect()->route('instances.index');
   }
 

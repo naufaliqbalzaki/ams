@@ -208,14 +208,12 @@ class DocumentController extends Controller
       }
 
       foreach ($sheetData as $key => $value) {
-        if (
-          $key > 0
-        ) {
+        if ($key > 0) {
           $number  = $value[1];
           $from = $value[2];
           $subject = $value[3];
           $instance_name = $value[4];
-          $instance_id = 2;
+          $instance_id = 1;
           if ($instance_name === null) {
             $instance_id = $latest->id;
           } else {
@@ -238,7 +236,7 @@ class DocumentController extends Controller
           $verification_time  =  $value[10] !== null && (strtotime($value[10])) ? date('H:i:s', strtotime($value[10])) : null;
           $description  = $value[11];
           $phone = $value[12];
-          $petugas = $value[13];
+          $petugas = isset($value[13]) ? $value[13] : null;
 
           if ($from !== null) {
             Document::create([
@@ -269,6 +267,7 @@ class DocumentController extends Controller
       Log::alert("IMPORT DOC ERR" . $th);
     }
   }
+
   public function export()
   {
 

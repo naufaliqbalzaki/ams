@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
 
 
   Route::resource('instances', InstanceController::class);
+  Route::post('/instances/destroy_batch', [InstanceController::class, 'destroyBatch'])->name('instances.destroy_batch');
 
   Route::resource('documents', DocumentController::class,);
   Route::post('/documents/import', [DocumentController::class, 'import'])->name('documents.import');

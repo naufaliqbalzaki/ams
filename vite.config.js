@@ -11,10 +11,10 @@ export default defineConfig({
     react()
   ],
   // prod server
-  server: {
-    https: process.env.APP_DEBUG,
-    host: '0.0.0.0',
-    port: 8000,
-    open: false
-  }
+  // server: {
+  //   https: process.env.APP_DEBUG,
+  //   host: '0.0.0.0',
+  //   port: 8000,
+  //   open: false
+  // }
 })
