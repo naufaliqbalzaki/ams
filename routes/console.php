@@ -19,4 +19,4 @@ Schedule::call(function () {
 
   exec($command, $output, $returnVar);
   Log::channel('backup')->info('Backup created: ' . $filename);
-})->everyMinute();
+})->monthly();

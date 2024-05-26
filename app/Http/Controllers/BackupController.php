@@ -49,7 +49,7 @@ class BackupController extends Controller
     if (!file_exists(storage_path() . "/db-backup")) {
       mkdir(storage_path() . "/db-backup", 0777, true);
     }
-    $command = "docker exec ams-mysql-1 /usr/bin/mysqldump -u " . env('DB_USERNAME') . " -p " . env('DB_DATABASE') . " --password=" . env('DB_PASSWORD')    . " > " . $path;
+    $command = "mysqldump -u " . env('DB_USERNAME') . " -p " . env('DB_DATABASE') . " --password=" . env('DB_PASSWORD')    . " > " . $path;
     exec($command);
     return redirect()->route('backups.index')->with('success', 'Backup database berhasil dibuat');
   }
