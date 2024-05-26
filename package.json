@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "concurrently -n php,js -c blue,yellow \"bun run dev:php\" \"bun run dev:js\"",
+    "dev": "concurrently -n php,js -c blue,yellow \"npm run dev:php\" \"npm run dev:js\"",
     "dev:php": "php artisan serve",
     "dev:js": "vite",
     "format": "prettier . '**/*.{ts,tsx}' --ignore-path .prettierignore --write",
