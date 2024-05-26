@@ -37,6 +37,7 @@ class ProfileController extends Controller
 
     $request->user()->save();
 
+    session()->flash('success', 'Profil berhasil diubah');
     return Redirect::route('profile.edit');
   }
 

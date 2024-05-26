@@ -21,7 +21,7 @@ export default function EditInstancePage({
     >
       <Head title={`Ubah Dinas "${instance.name}"`} />
 
-      <div className="px-8 mx-auto max-w-7xl">
+      <div className="px-8 mx-auto max-w-[1728px]">
         <InstanceForm instance={instance} appUrl={appUrl} />
       </div>
     </Authenticated>

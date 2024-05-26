@@ -1,6 +1,6 @@
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu'
 import { MixerHorizontalIcon } from '@radix-ui/react-icons'
-import { Table } from '@tanstack/react-table'
+import { Column, Table } from '@tanstack/react-table'
 
 import {
   AlertDialog,
@@ -27,6 +27,14 @@ interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
   name?: 'documents' | 'instances' | 'reports'
   doc_type?: 'central' | 'east'
+}
+
+function determineText(column: Column<any, any>) {
+  if (typeof column.columnDef.meta === 'string') {
+    return column.columnDef.meta
+  }
+
+  return column.id
 }
 
 export function DataTableViewOptions<TData>({
@@ -95,7 +103,7 @@ export function DataTableViewOptions<TData>({
             Filter
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-[150px]">
+        <DropdownMenuContent align="end" className="">
           <DropdownMenuLabel>
             Kolom yang ditampilkan
           </DropdownMenuLabel>
@@ -117,7 +125,7 @@ export function DataTableViewOptions<TData>({
                     column.toggleVisibility(!!value)
                   }
                 >
-                  {column.id}
+                  {determineText(column)}
                 </DropdownMenuCheckboxItem>
               )
             })}

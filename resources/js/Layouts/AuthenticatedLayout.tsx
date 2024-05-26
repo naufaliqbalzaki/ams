@@ -30,7 +30,11 @@ export default function Authenticated({
   return (
     <div className="min-h-screen">
       <nav className="border-b border-gray-100 dark:border-gray-700">
-        <div className={cn('px-4 mx-auto max-w-7xl sm:px-6 lg:px-8')}>
+        <div
+          className={cn(
+            'px-4 mx-auto max-w-[1728px] sm:px-6 lg:px-8'
+          )}
+        >
           <div className="flex justify-between h-16">
             <div className="flex">
               <div className="flex items-center shrink-0">
@@ -257,7 +261,7 @@ export default function Authenticated({
 
       {header && (
         <header>
-          <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="px-4 py-6 mx-auto max-w-[1728px] sm:px-6 lg:px-8">
             {header}
           </div>
         </header>

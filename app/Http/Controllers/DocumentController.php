@@ -201,6 +201,11 @@ class DocumentController extends Controller
 
       $count = 0;
       $latest = Instance::latest()->first();
+      if (!$latest) {
+        $latest = Instance::create([
+          'name' => 'Dinas Pendidikan',
+        ]);
+      }
 
       foreach ($sheetData as $key => $value) {
         if (
@@ -233,6 +238,7 @@ class DocumentController extends Controller
           $verification_time  =  $value[10] !== null && (strtotime($value[10])) ? date('H:i:s', strtotime($value[10])) : null;
           $description  = $value[11];
           $phone = $value[12];
+          $petugas = $value[13];
 
           if ($from !== null) {
             Document::create([
@@ -248,14 +254,14 @@ class DocumentController extends Controller
               'verification_date' => $verification_date . ' ' . $verification_time,
               'description' => $description,
               'phone' => $phone,
-              'petugas' => NULL,
+              'petugas' => $petugas,
             ]);
             $count++;
           }
         }
       }
 
-      session()->flash('success', $count . ' ' . $request->type . ' documents imported successfully');
+      session()->flash('success', $count . ' ' . $request->type . ' dokumen berhasil diimport');
       return redirect()->route('documents.index', [
         'type' => $request->doc_type,
       ]);
@@ -285,6 +291,7 @@ class DocumentController extends Controller
     $sheet->getColumnDimension('I')->setWidth(25);
     $sheet->getColumnDimension('J')->setWidth(25);
     $sheet->getColumnDimension('K')->setWidth(20);
+    $sheet->getColumnDimension('L')->setWidth(25);
 
     $sheet->setCellValue('A1', 'No.');
     $sheet->setCellValue('B1', 'Kantor');
@@ -297,6 +304,8 @@ class DocumentController extends Controller
     $sheet->setCellValue('I1', 'Tanggal Verifikasi');
     $sheet->setCellValue('J1', 'Keterangan');
     $sheet->setCellValue('K1', 'Telepon');
+    $sheet->setCellValue('L1', 'Petugas');
+
 
     $headerStyle = [
       'font' => [
@@ -323,7 +332,7 @@ class DocumentController extends Controller
         ],
       ],
     ];
-    $sheet->getStyle('A1:K1')->applyFromArray($headerStyle);
+    $sheet->getStyle('A1:L1')->applyFromArray($headerStyle);
     $sheet->getRowDimension('1')->setRowHeight(30);
 
     $row = 2;
@@ -339,6 +348,7 @@ class DocumentController extends Controller
       $sheet->setCellValue('I' . $row, $document->verification_date);
       $sheet->setCellValue('J' . $row, $document->description);
       $sheet->setCellValue('K' . $row, $document->phone);
+      $sheet->setCellValue('L' . $row, $document->petugas);
 
       $borderStyle = [
         'borders' => [
@@ -349,7 +359,7 @@ class DocumentController extends Controller
         ],
       ];
 
-      $sheet->getStyle('A' . $row . ':K' . $row)->applyFromArray($borderStyle);
+      $sheet->getStyle('A' . $row . ':L' . $row)->applyFromArray($borderStyle);
       $sheet->getStyle('A' . $row . ':B' . $row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
       $row++;

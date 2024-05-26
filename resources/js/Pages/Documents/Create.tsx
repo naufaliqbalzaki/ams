@@ -40,7 +40,7 @@ export default function CreateDocumentPage({
     >
       <Head title={`Buat Surat Masuk ${type}`} />
 
-      <div className="px-8 mx-auto max-w-7xl">
+      <div className="px-8 mx-auto max-w-[1728px]">
         <DocumentForm
           userId={auth.user.id}
           docType={docType}

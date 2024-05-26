@@ -1,11 +1,12 @@
 import { DataTable } from '@/Components/table/DataTable'
+import { DataTableColumnHeader } from '@/Components/table/DataTableColumnHeader'
 import { DataTableRowActions } from '@/Components/table/DataTableRowActions'
 import { Button } from '@/Components/ui/button'
 import { Checkbox } from '@/Components/ui/checkbox'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Instance, PageProps } from '@/types'
 import { Head, router } from '@inertiajs/react'
-import { CaretSortIcon, PlusIcon } from '@radix-ui/react-icons'
+import { PlusIcon } from '@radix-ui/react-icons'
 import { ColumnDef } from '@tanstack/react-table'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
@@ -65,19 +66,10 @@ function generateColumn({
     // },
     {
       accessorKey: 'name',
-      header({ column }) {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() =>
-              column.toggleSorting(column.getIsSorted() === 'asc')
-            }
-          >
-            Nama
-            <CaretSortIcon className="w-4 h-4 ml-2" />
-          </Button>
-        )
-      }
+      meta: 'Nama Dinas',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Nama Dinas" />
+      )
     },
     // {
     //   accessorKey: 'email',
@@ -178,7 +170,7 @@ export default function IndexInstancePage({
     >
       <Head title="Dinas" />
 
-      <div className="px-8 pb-8 mx-auto max-w-7xl">
+      <div className="px-8 pb-8 mx-auto max-w-[1728px]">
         <DataTable
           columns={columns}
           data={instances}

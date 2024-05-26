@@ -1,4 +1,5 @@
 import { DataTable } from '@/Components/table/DataTable'
+import { DataTableColumnHeader } from '@/Components/table/DataTableColumnHeader'
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import Authenticated from '@/Layouts/AuthenticatedLayout'
@@ -18,7 +19,9 @@ function generateColumn({
   return [
     {
       accessorKey: 'name',
-      header: 'Nama File',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Nama File" />
+      ),
       cell(props) {
         if (props.row.index === 0) {
           return (
@@ -36,7 +39,13 @@ function generateColumn({
     },
     {
       accessorKey: 'created_at',
-      header: 'Tanggal Dibuat',
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title="Tanggal Dibuat"
+        />
+      ),
+
       cell(props) {
         const value = props.getValue()
         const date = new Date(value)
@@ -55,7 +64,9 @@ function generateColumn({
     },
     {
       accessorKey: 'size',
-      header: 'Ukuran',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Ukuran" />
+      ),
       cell(props) {
         return <span>{props.getValue() / 1000} KB</span>
       }
@@ -134,7 +145,7 @@ export default function BackupIndexPage({
     >
       <Head title="Backup" />
 
-      <div className="px-8 pb-8 mx-auto max-w-7xl">
+      <div className="px-8 pb-8 mx-auto max-w-[1728px]">
         <DataTable
           columns={columns}
           data={files}

@@ -1,4 +1,5 @@
 import { DataTable } from '@/Components/table/DataTable'
+import { DataTableColumnHeader } from '@/Components/table/DataTableColumnHeader'
 import { Button } from '@/Components/ui/button'
 import Authenticated from '@/Layouts/AuthenticatedLayout'
 import { PageProps } from '@/types'
@@ -13,19 +14,61 @@ export default function ReportIndexPage({
   const columns: ColumnDef<any, any>[] = [
     {
       accessorKey: 'subject',
-      header: 'Perizinan'
+      meta: 'Perizinan',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Perizinan" />
+      )
     },
     {
       accessorKey: 'approved_total',
-      header: 'Disetujui'
+      meta: 'Disetujui',
+      header: ({ column }) => (
+        <div className="flex items-center justify-center gap-2 ml-4">
+          <DataTableColumnHeader column={column} title="Disetujui" />
+        </div>
+      ),
+      cell(props) {
+        return (
+          <div className="flex items-center justify-center gap-2">
+            {props.getValue()}
+          </div>
+        )
+      }
     },
     {
       accessorKey: 'corrective_total',
-      header: 'Ditolak'
+      meta: 'Dikembalikan',
+      header: ({ column }) => (
+        <div className="flex items-center justify-center gap-2 ml-4">
+          <DataTableColumnHeader
+            column={column}
+            title="Dikembalikan"
+          />
+        </div>
+      ),
+      cell(props) {
+        return (
+          <div className="flex items-center justify-center gap-2">
+            {props.getValue()}
+          </div>
+        )
+      }
     },
     {
       accessorKey: 'total',
-      header: 'Total'
+      meta: 'Total',
+      header: ({ column }) => (
+        <div className="flex items-center justify-center gap-2 ml-4">
+          <DataTableColumnHeader column={column} title="Total" />
+        </div>
+      ),
+      cell(props) {
+        return (
+          <div className="flex items-center justify-center gap-2">
+            {props.getValue()}
+          </div>
+        )
+      }
     }
   ]
   return (
@@ -49,7 +92,7 @@ export default function ReportIndexPage({
     >
       <Head title="Laporan" />
 
-      <div className="px-8 pb-8 mx-auto max-w-7xl">
+      <div className="px-8 pb-8 mx-auto max-w-[1728px]">
         <DataTable
           columns={columns}
           data={subjects}

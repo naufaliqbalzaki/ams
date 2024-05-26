@@ -161,8 +161,8 @@ export default function Dashboard({
     >
       <Head title="Dashboard" />
 
-      <div className="px-8 mx-auto max-w-7xl">
-        <div className="grid grid-cols-1 gap-2 transition-all duration-300 ease-in-out md:grid-cols-2">
+      <div className="px-8 mx-auto max-w-[1728px]">
+        <div className="grid grid-cols-1 gap-2 transition-all duration-300 ease-in-out md:grid-cols-3">
           {keys.map((key) => (
             <Card key={key}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0">

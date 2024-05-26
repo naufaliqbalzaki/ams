@@ -2,15 +2,29 @@ import InputError from '@/Components/InputError'
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
 import { Label } from '@/Components/ui/label'
-import { Transition } from '@headlessui/react'
-import { useForm } from '@inertiajs/react'
-import { FormEventHandler, useRef } from 'react'
+import { PageProps } from '@/types'
+import { useForm, usePage } from '@inertiajs/react'
+import { FormEventHandler, useEffect, useRef } from 'react'
+import { toast } from 'sonner'
 
 export default function UpdatePasswordForm({
   className = ''
 }: {
   className?: string
 }) {
+  const flash = usePage<PageProps>().props.flash
+
+  useEffect(() => {
+    toast.dismiss()
+    if (flash?.success) {
+      toast.success(flash.success)
+    }
+
+    if (flash?.error) {
+      toast.error(flash.error)
+    }
+  }, [flash])
+
   const passwordInput = useRef<HTMLInputElement>(null)
   const currentPasswordInput = useRef<HTMLInputElement>(null)
 
@@ -52,18 +66,22 @@ export default function UpdatePasswordForm({
     <section className={className}>
       <header>
         <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-          Update Password
+          Ubah Kata Sandi
         </h2>
 
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-          Ensure your account is using a long, random password to stay
-          secure.
+          Pastikan kata sandi Anda aman.
         </p>
       </header>
 
-      <form onSubmit={updatePassword} className="mt-6 space-y-6">
+      <form
+        onSubmit={updatePassword}
+        className="h-full mt-6 space-y-6"
+      >
         <div>
-          <Label htmlFor="current_password">Current Password</Label>
+          <Label htmlFor="current_password">
+            Kata Sandi Saat Ini
+          </Label>
 
           <Input
             id="current_password"
@@ -84,7 +102,7 @@ export default function UpdatePasswordForm({
         </div>
 
         <div>
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">Kata Sandi Baru</Label>
 
           <Input
             id="password"
@@ -101,7 +119,7 @@ export default function UpdatePasswordForm({
 
         <div>
           <Label htmlFor="password_confirmation">
-            Confirm Password
+            Konfirmasi Kata Sandi Baru
           </Label>
 
           <Input
@@ -122,19 +140,12 @@ export default function UpdatePasswordForm({
         </div>
 
         <div className="flex items-center gap-4">
-          <Button disabled={processing}>Save</Button>
-
-          <Transition
-            show={recentlySuccessful}
-            enter="transition ease-in-out"
-            enterFrom="opacity-0"
-            leave="transition ease-in-out"
-            leaveTo="opacity-0"
+          <Button
+            disabled={processing}
+            className="absolute bottom-0 w-full"
           >
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Saved.
-            </p>
-          </Transition>
+            Simpan
+          </Button>
         </div>
       </form>
     </section>

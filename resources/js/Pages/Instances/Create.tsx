@@ -20,7 +20,7 @@ export default function CreateInstancePage({
     >
       <Head title="Buat Dinas Baru" />
 
-      <div className="px-8 mx-auto max-w-7xl">
+      <div className="px-8 mx-auto max-w-[1728px]">
         <InstanceForm appUrl={appUrl} />
       </div>
     </Authenticated>

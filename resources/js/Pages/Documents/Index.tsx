@@ -1,4 +1,5 @@
 import { DataTable } from '@/Components/table/DataTable'
+import { DataTableColumnHeader } from '@/Components/table/DataTableColumnHeader'
 import { DataTableRowActions } from '@/Components/table/DataTableRowActions'
 import { Button } from '@/Components/ui/button'
 import { Checkbox } from '@/Components/ui/checkbox'
@@ -11,7 +12,12 @@ import {
 import Authenticated from '@/Layouts/AuthenticatedLayout'
 import { Document, PageProps } from '@/types'
 import { Head, router } from '@inertiajs/react'
-import { DownloadIcon, PlusIcon } from '@radix-ui/react-icons'
+import {
+  CheckIcon,
+  CrossCircledIcon,
+  DownloadIcon,
+  PlusIcon
+} from '@radix-ui/react-icons'
 import { ColumnDef } from '@tanstack/react-table'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -51,11 +57,17 @@ function generateAllColumn({
     },
     {
       accessorKey: 'number',
-      header: 'No.'
+      meta: 'No.',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="No." />
+      )
     },
     {
       accessorKey: 'from',
-      header: 'Pemohon',
+      meta: 'Pemohon',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Pemohon" />
+      ),
       cell(props) {
         const text: string = props.getValue()
         if (text.length > 20) {
@@ -67,15 +79,24 @@ function generateAllColumn({
     },
     {
       accessorKey: 'phone',
-      header: 'Telepon'
+      meta: 'Telepon',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Telepon" />
+      )
     },
     {
       accessorKey: 'instance_name',
-      header: 'Dinas'
+      meta: 'Dinas',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Dinas" />
+      )
     },
     {
       accessorKey: 'subject',
-      header: 'Perizinan',
+      meta: 'Perizinan',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Perizinan" />
+      ),
       cell(props) {
         const text: string = props.getValue()
         if (text.length > 20) {
@@ -87,27 +108,62 @@ function generateAllColumn({
     },
     {
       accessorKey: 'description',
-      header: 'Keterangan'
+      meta: 'Keterangan',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Keterangan" />
+      )
     },
     {
       id: 'is_corrective',
-      header: 'Dikembalikan',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Dikembalikan" />
+      ),
       cell: ({ row }) => {
         const status = row.original.corrective_action ? 'Ya' : 'Tidak'
         return (
-          <div className="flex items-center justify-center">
-            <i
+          <div className="flex items-center justify-center gap-2">
+            <p
               className={`text-${status === 'Ya' ? 'green' : 'red'}-500`}
             >
               {status}
-            </i>
+            </p>
+            {status === 'Ya' ? (
+              <CheckIcon className="text-green-500 size-4" />
+            ) : (
+              <CrossCircledIcon className="text-red-500 size-4" />
+            )}
           </div>
         )
       }
     },
     {
+      accessorKey: 'petugas',
+      meta: 'Petugas',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Petugas" />
+      ),
+      cell(props) {
+        const text: string = props.getValue()
+        if (!text) {
+          return (
+            <div className="flex items-center justify-center">-</div>
+          )
+        } else if (text.length > 20) {
+          return text.slice(0, 20) + '...'
+        } else {
+          return text
+        }
+      }
+    },
+    {
       accessorKey: 'issue_date',
-      header: 'Tanggal Terbit',
+      meta: 'Tanggal Masuk',
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title="Tanggal Masuk"
+        />
+      ),
       filterFn: 'dateRangeFilter',
       cell(props) {
         const date = new Date(props.getValue())
@@ -122,7 +178,13 @@ function generateAllColumn({
     },
     {
       accessorKey: 'verification_date',
-      header: 'Tanggal Verifikasi',
+      meta: 'Tanggal Verifikasi',
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title="Tanggal Verifikasi"
+        />
+      ),
       filterFn: 'dateRangeFilter',
       cell(props) {
         const date = new Date(props.getValue())
@@ -264,7 +326,7 @@ export default function DocumentsPage({
     >
       <Head title={`Surat Masuk ${type}`} />
 
-      <div className="px-8 pb-8 mx-auto max-w-7xl">
+      <div className="px-8 pb-8 mx-auto max-w-[1728px]">
         <Tabs defaultValue="all">
           <TabsList className="grid w-full grid-cols-2 mb-4">
             <TabsTrigger value="all">Semua</TabsTrigger>
