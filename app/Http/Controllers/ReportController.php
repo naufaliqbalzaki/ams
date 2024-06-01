@@ -15,9 +15,15 @@ class ReportController extends Controller
   public function index()
   {
     $subjects = DB::table('documents')
-      ->select('subject', DB::raw('count(corrective_action) as approved_total'), DB::raw('count(next_action) as corrective_total'))
-      ->groupBy('subject')
+      ->select(
+        'subject',
+        'verification_date',
+        DB::raw('count(corrective_action) as approved_total'),
+        DB::raw('count(next_action) as corrective_total')
+      )
+      ->groupBy('subject', 'verification_date')
       ->get();
+
 
     $subjects = array_map(function ($subject) {
       return [
@@ -25,6 +31,7 @@ class ReportController extends Controller
         'approved_total' => $subject->approved_total,
         'corrective_total' => $subject->corrective_total,
         'total' => $subject->approved_total + $subject->corrective_total,
+        'verification_date' => $subject->verification_date,
       ];
     }, $subjects->toArray());
 

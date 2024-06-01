@@ -91,7 +91,6 @@ export function DataTableToolbar<TData>({
         />
         {name === 'documents' && (
           <>
-            {' '}
             <DataTableDateRange
               table={table}
               name={name}
@@ -107,6 +106,15 @@ export function DataTableToolbar<TData>({
               setDate={setVerificationDate}
             />
           </>
+        )}{' '}
+        {name === 'reports' && (
+          <DataTableDateRange
+            table={table}
+            name={name}
+            type="verification_date"
+            date={verificationDate}
+            setDate={setVerificationDate}
+          />
         )}
         <ClearButton
           table={table}

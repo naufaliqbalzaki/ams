@@ -11,6 +11,7 @@ export default function ReportIndexPage({
   auth,
   subjects
 }: PageProps & { subjects: any }) {
+  console.log(subjects)
   const columns: ColumnDef<any, any>[] = [
     {
       accessorKey: 'subject',
@@ -18,6 +19,17 @@ export default function ReportIndexPage({
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Perizinan" />
       )
+    },
+    {
+      accessorKey: 'verification_date',
+      meta: 'Tanggal Verifikasi',
+      header: '',
+      filterFn: 'dateRangeFilter',
+      cell(props) {
+        const date = new Date(props.getValue())
+        console.log(date)
+        return null
+      }
     },
     {
       accessorKey: 'approved_total',
