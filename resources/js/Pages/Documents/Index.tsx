@@ -18,7 +18,7 @@ import {
   DownloadIcon,
   PlusIcon
 } from '@radix-ui/react-icons'
-import { ColumnDef } from '@tanstack/react-table'
+import { ColumnDef, RowModel } from '@tanstack/react-table'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { ImportForm } from './_import_form'
@@ -268,6 +268,9 @@ export default function DocumentsPage({
   const [importOpen, setImportOpen] = useState(false)
   const allColumns = generateAllColumn({ appUrl })
   const sumColumns = generateSummaryColumn()
+  const [filteredData, setFilteredData] = useState<
+    RowModel<any> | undefined
+  >(undefined)
 
   useEffect(() => {
     setImportOpen(false)
@@ -300,7 +303,14 @@ export default function DocumentsPage({
             {type}
           </h2>
           <div className="flex items-center gap-2">
-            <a href={route('documents.file.export')}>
+            <a
+              href={route('documents.file.export', {
+                doc_type: doc_type,
+                ids: filteredData?.rows.map((row: any) =>
+                  parseInt(row.original.id)
+                )
+              })}
+            >
               <Button variant="secondary" type="button">
                 <DownloadIcon className="w-5 h-5" />
                 Export
@@ -339,6 +349,7 @@ export default function DocumentsPage({
               name="documents"
               doc_type="central"
               searchParam="from"
+              setFilteredData={setFilteredData}
             />
           </TabsContent>
           <TabsContent value="summary">
@@ -350,6 +361,7 @@ export default function DocumentsPage({
               name="documents"
               doc_type="central"
               searchParam="from"
+              setFilteredData={setFilteredData}
             />
           </TabsContent>
         </Tabs>
