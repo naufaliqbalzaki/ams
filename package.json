@@ -6,8 +6,7 @@
     "dev:php": "php artisan serve",
     "dev:js": "vite",
     "format": "prettier . '**/*.{ts,tsx}' --ignore-path .prettierignore --write",
-    "build": "tsc && vite build",
-    "prepare": "husky"
+    "build": "tsc && vite build"
   },
   "devDependencies": {
     "@headlessui/react": "^1.4.2",
@@ -19,8 +18,7 @@
     "@vitejs/plugin-react": "^4.2.0",
     "autoprefixer": "^10.4.12",
     "axios": "^1.6.4",
-    "concurrently": "^8.2.2",
-    "husky": "^9.0.11",
+    "concurrently": "^8.2.2", 
     "laravel-vite-plugin": "^1.0",
     "postcss": "^8.4.31",
     "prettier": "^3.2.5",
