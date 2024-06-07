@@ -8,8 +8,8 @@ import {
 } from '@/Components/ui/popover'
 import { cn } from '@/lib/utils'
 import { CalendarIcon, Cross2Icon } from '@radix-ui/react-icons'
-import { Table } from '@tanstack/react-table'
-import { useEffect, useState } from 'react'
+import { RowModel, Table } from '@tanstack/react-table'
+import { Dispatch, useEffect, useState } from 'react'
 import { DateRange } from 'react-day-picker'
 import { DataTableViewOptions } from './DataTableViewOptions'
 
@@ -45,7 +45,7 @@ const ClearButton = ({
         }}
         className="h-8 px-2 lg:px-3"
       >
-        Reset
+        Atur Ulang
         <Cross2Icon className="w-4 h-4 ml-2" />
       </Button>
     )
@@ -59,12 +59,19 @@ export function DataTableToolbar<TData>({
   doc_type,
   searchParam,
   setGlobalFilter,
-  globalFilter
-}: DataTableToolbarProps<TData>) {
+  globalFilter,
+  setFilteredData
+}: DataTableToolbarProps<TData> & {
+  setFilteredData?: Dispatch<RowModel<TData>>
+}) {
   const [issueDate, setIssueDate] = useState<DateRange | undefined>()
   const [verificationDate, setVerificationDate] = useState<
     DateRange | undefined
   >()
+
+  useEffect(() => {
+    setFilteredData?.(table.getFilteredRowModel())
+  }, [table.getState().columnFilters])
 
   return (
     <div className="flex items-center justify-between">
@@ -79,12 +86,12 @@ export function DataTableToolbar<TData>({
             ''
           }
           onChange={(event) => {
-            if (name !== 'documents') {
+            if (name === 'documents') {
+              setGlobalFilter?.(event.target.value)
+            } else {
               table
                 .getColumn(searchParam || '')
                 ?.setFilterValue(event.target.value)
-            } else {
-              setGlobalFilter?.(event.target.value)
             }
           }}
           className="h-8 w-[150px] lg:w-[250px]"

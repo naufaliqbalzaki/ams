@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ExportDocumentRequest;
 use App\Http\Requests\StoreDocumentRequest;
 use App\Http\Requests\UpdateDocumentRequest;
 use App\Models\Document;
@@ -268,10 +269,16 @@ class DocumentController extends Controller
     }
   }
 
-  public function export()
+  public function export(ExportDocumentRequest $request)
   {
+    $doc_type = $request->doc_type;
+    $ids = $request->ids;
 
-    $documents = Document::all();
+    if ($ids) {
+      $documents = Document::whereIn('id', $ids)->get();
+    } else {
+      $documents = Document::where('doc_type', $doc_type)->get();
+    }
 
     if ($documents->isEmpty()) {
       return redirect()->back()->with('error', 'No documents to export');
@@ -334,6 +341,7 @@ class DocumentController extends Controller
     $sheet->getStyle('A1:L1')->applyFromArray($headerStyle);
     $sheet->getRowDimension('1')->setRowHeight(30);
 
+
     $row = 2;
     foreach ($documents as $document) {
       $sheet->setCellValue('A' . $row, $document->number);
@@ -375,6 +383,8 @@ class DocumentController extends Controller
     $writer->save($filePath);
 
     return response()->download($filePath)->deleteFileAfterSend(true);
+    // return response()->json(['name' => $fileName]);
+    // return redirect()->route('documents.file.download', ['name' => $fileName]);
   }
 
   public function download_template()

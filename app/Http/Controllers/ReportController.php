@@ -15,27 +15,22 @@ class ReportController extends Controller
   public function index()
   {
     $subjects = DB::table('documents')
-      ->select(
-        'subject',
-        'verification_date',
-        DB::raw('count(corrective_action) as approved_total'),
-        DB::raw('count(next_action) as corrective_total')
-      )
-      ->groupBy('subject', 'verification_date')
+      ->select('subject', DB::raw('count(corrective_action) as approved_total'), DB::raw('count(next_action) as corrective_total'))
+      ->groupBy('subject')
       ->get();
 
 
-    $subjects = array_map(function ($subject) {
-      return [
-        'subject' => $subject->subject,
-        'approved_total' => $subject->approved_total,
-        'corrective_total' => $subject->corrective_total,
-        'total' => $subject->approved_total + $subject->corrective_total,
-        'verification_date' => $subject->verification_date,
-      ];
-    }, $subjects->toArray());
 
 
+    foreach ($subjects as $subject) {
+      $subject->verification_date = DB::table('documents')
+        ->select('verification_date')
+        ->where('subject', $subject->subject)
+        ->orderBy('verification_date', 'asc')
+        ->get();
+
+      $subject->total = $subject->approved_total + $subject->corrective_total;
+    }
     return Inertia::render('Reports/Index', [
       'subjects' => $subjects,
     ]);

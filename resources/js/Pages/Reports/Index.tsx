@@ -11,7 +11,6 @@ export default function ReportIndexPage({
   auth,
   subjects
 }: PageProps & { subjects: any }) {
-  console.log(subjects)
   const columns: ColumnDef<any, any>[] = [
     {
       accessorKey: 'subject',
@@ -24,10 +23,10 @@ export default function ReportIndexPage({
       accessorKey: 'verification_date',
       meta: 'Tanggal Verifikasi',
       header: '',
-      filterFn: 'dateRangeFilter',
+      filterFn: 'reportVerificationDateRangeFilter',
       cell(props) {
-        const date = new Date(props.getValue())
-        console.log(date)
+        // const date = new Date(props.getValue())
+        // const dateString = date.toLocaleDateString()
         return null
       }
     },

@@ -210,55 +210,6 @@ const InstanceDetail = ({
         {data.name}
       </p>
     </TableRow>
-    {/* <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
-      <p className="font-medium min-w-32">Aktif</p>
-      <p>
-        <span className="mr-2">:</span>
-        {data.is_active ? 'Ya' : 'Tidak'}
-      </p>
-    </TableRow>
-    <TableRow className="flex items-center gap-2 p-2 dark:bg-inherit">
-      <p className="font-medium min-w-32">Email</p>
-      <p>
-        <span className="mr-2">:</span>
-        {data.email}
-      </p>
-    </TableRow>
-    <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
-      <p className="font-medium min-w-32">Website</p>
-      <p>
-        <span className="mr-2">:</span>
-        {data.website}
-      </p>
-    </TableRow>
-    <TableRow className="flex items-center gap-2 p-2 dark:bg-inherit">
-      <p className="font-medium min-w-32">Alamat</p>
-      <p>
-        <span className="mr-2">:</span>
-        {data.address}
-      </p>
-    </TableRow>
-    <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
-      <p className="font-medium min-w-32">Kecamatan</p>
-      <p>
-        <span className="mr-2">:</span>
-        {data.district}
-      </p>
-    </TableRow>
-    <TableRow className="flex items-center gap-2 p-2 dark:bg-inherit">
-      <p className="font-medium min-w-32">Kota</p>
-      <p>
-        <span className="mr-2">:</span>
-        {data.city}
-      </p>
-    </TableRow>
-    <TableRow className="flex items-center gap-2 p-2 dark:bg-neutral-900">
-      <p className="font-medium min-w-32">Provinsi</p>
-      <p>
-        <span className="mr-2">:</span>
-        {data.province}
-      </p>
-    </TableRow> */}
     <TableRow className="flex items-center gap-2 p-2 mt-6 border-none justify-evenly dark:bg-inherit">
       <DeleteDataDialog id={data.id} name={name} showText={true} />
       <EditDataLink id={data.id} name={name} showText={true} />

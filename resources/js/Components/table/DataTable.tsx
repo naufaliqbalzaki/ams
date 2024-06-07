@@ -11,6 +11,7 @@ import {
   ColumnDef,
   ColumnFiltersState,
   FilterFn,
+  RowModel,
   SortingFn,
   SortingState,
   VisibilityState,
@@ -24,7 +25,7 @@ import {
   sortingFns,
   useReactTable
 } from '@tanstack/react-table'
-import { useEffect, useState } from 'react'
+import { Dispatch, useEffect, useState } from 'react'
 import { DataTablePagination } from './DataTablePagination'
 import { DataTableToolbar } from './DataTableToolbar'
 
@@ -38,6 +39,7 @@ declare module '@tanstack/table-core' {
   interface FilterFns {
     fuzzy: FilterFn<unknown>
     dateRangeFilter: FilterFn<unknown>
+    reportVerificationDateRangeFilter: FilterFn<unknown>
   }
   interface FilterMeta {
     itemRank: RankingInfo
@@ -71,10 +73,56 @@ export const dateRangeFilter: FilterFn<any> = (
       date.getTime() >= from.getTime() &&
       date.getTime() <= to.getTime()
     )
-  } else return true
+  } else {
+    return true
+  }
 }
 
 dateRangeFilter.autoRemove
+
+export const reportVerificationDateRangeFilter: FilterFn<any> = (
+  row,
+  columnId,
+  value
+) => {
+  const data = row.getValue(columnId)
+  if (typeof data !== 'object') {
+    return false
+  } else {
+    if (data === null) {
+      return false
+    } else {
+      const array = Object.values(data)
+      const from = new Date(value.from)
+      const to = new Date(value.to)
+      if ((from || to) && !array) return false
+      if (from && !to) {
+        return array.some((date: { verification_date: string }) => {
+          const dateValue = new Date(date.verification_date)
+          return dateValue.getTime() >= from.getTime()
+        })
+      } else if (!from && to) {
+        return array.some((date: { verification_date: string }) => {
+          const dateValue = new Date(date.verification_date)
+          return dateValue.getTime() <= to.getTime()
+        })
+      } else if (from && to) {
+        return array.some((date: { verification_date: string }) => {
+          const dateValue = new Date(date.verification_date)
+          return (
+            dateValue.getTime() >= from.getTime() &&
+            dateValue.getTime() <= to.getTime()
+          )
+        })
+      } else {
+        return true
+      }
+    }
+  }
+}
+
+reportVerificationDateRangeFilter.autoRemove
+
 export const fuzzyFilter: FilterFn<any> = (
   row,
   columnId,
@@ -111,8 +159,11 @@ export function DataTable<TData, TValue>({
   doc_type,
   searchParam,
   showToolbar = true,
-  pageSizeOptions = [10, 20, 30, 40, 50, 100, 200, 500]
-}: DataTableProps<TData, TValue>) {
+  pageSizeOptions = [10, 20, 30, 40, 50, 100, 200, 500],
+  setFilteredData
+}: DataTableProps<TData, TValue> & {
+  setFilteredData?: Dispatch<RowModel<TData>>
+}) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] =
     useState<VisibilityState>({})
@@ -133,6 +184,8 @@ export function DataTable<TData, TValue>({
     },
     filterFns: {
       dateRangeFilter: dateRangeFilter,
+      reportVerificationDateRangeFilter:
+        reportVerificationDateRangeFilter,
       fuzzy: fuzzyFilter
     },
     onGlobalFilterChange: setGlobalFilter,
@@ -149,21 +202,35 @@ export function DataTable<TData, TValue>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues()
   })
+
   useEffect(() => {
     if (pageSizeOptions) {
       table.setPageSize(pageSizeOptions[0])
     }
   }, [table])
-  let total = 0
-  let approved = 0
-  let corrective = 0
-  if (name === 'reports') {
-    data.map((item: any) => {
-      approved = approved + item.approved_total
-      corrective = corrective + item.corrective_total
-      total = total + item.total
-    })
-  }
+
+  const [total, setTotal] = useState(0)
+  const [approved, setApproved] = useState(0)
+  const [corrective, setCorrective] = useState(0)
+
+  useEffect(() => {
+    if (name === 'reports') {
+      const data = table.getFilteredRowModel().rows
+      let tempTotal = 0
+      let tempApproved = 0
+      let tempCorrective = 0
+      data.map((item: any) => {
+        const original = item.original
+        tempTotal += original.total
+        tempApproved += original.approved_total
+        tempCorrective += original.corrective_total
+      })
+      setTotal(tempTotal)
+      setApproved(tempApproved)
+      setCorrective(tempCorrective)
+    }
+  }, [table.getFilteredRowModel()])
+
   return (
     <div className="space-y-4">
       {showToolbar && (
@@ -174,6 +241,7 @@ export function DataTable<TData, TValue>({
           searchParam={searchParam}
           setGlobalFilter={setGlobalFilter}
           globalFilter={globalFilter}
+          setFilteredData={setFilteredData}
         />
       )}
       <div className="border rounded-md">
@@ -230,13 +298,14 @@ export function DataTable<TData, TValue>({
                     <TableCell className="bg-opacity-50 bg-sky-500">
                       Total Keseluruhan
                     </TableCell>
-                    <TableCell className="bg-opacity-50 bg-sky-500">
+                    <TableCell className="bg-opacity-50 bg-sky-500"></TableCell>
+                    <TableCell className="text-center bg-opacity-50 bg-sky-500">
                       {approved}
                     </TableCell>
-                    <TableCell className="bg-opacity-50 bg-sky-500">
+                    <TableCell className="text-center bg-opacity-50 bg-sky-500">
                       {corrective}
                     </TableCell>
-                    <TableCell className="bg-opacity-50 bg-sky-500">
+                    <TableCell className="text-center bg-opacity-50 bg-sky-500">
                       {total}
                     </TableCell>
                   </TableRow>
