@@ -5,11 +5,14 @@ import Authenticated from '@/Layouts/AuthenticatedLayout'
 import { PageProps } from '@/types'
 import { Head } from '@inertiajs/react'
 import { DownloadIcon } from '@radix-ui/react-icons'
-import { ColumnDef } from '@tanstack/react-table'
+import { ColumnDef, RowModel } from '@tanstack/react-table'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 export default function ReportIndexPage({
   auth,
-  subjects
+  subjects,
+  flash
 }: PageProps & { subjects: any }) {
   const columns: ColumnDef<any, any>[] = [
     {
@@ -25,8 +28,6 @@ export default function ReportIndexPage({
       header: '',
       filterFn: 'reportVerificationDateRangeFilter',
       cell(props) {
-        // const date = new Date(props.getValue())
-        // const dateString = date.toLocaleDateString()
         return null
       }
     },
@@ -82,6 +83,33 @@ export default function ReportIndexPage({
       }
     }
   ]
+
+  const [filteredData, setFilteredData] = useState<
+    RowModel<any> | undefined
+  >(undefined)
+
+  const [filteredIds, setFilteredIds] = useState<number[]>([])
+
+  useEffect(() => {
+    toast.dismiss()
+    if (flash?.success) {
+      toast.success(flash.success)
+    }
+
+    if (flash?.error) {
+      toast.error(flash.error)
+    }
+    let tempIds: number[] = []
+    if (filteredData) {
+      filteredData.rows.map((row) => {
+        row.original.id.map((id: any) => {
+          tempIds.push(id.id)
+        })
+      })
+      setFilteredIds(tempIds)
+    }
+  }, [flash, filteredData])
+
   return (
     <Authenticated
       user={auth.user}
@@ -91,7 +119,11 @@ export default function ReportIndexPage({
             Laporan
           </h2>
           <div className="flex items-center gap-2">
-            <a href={route('reports.download')}>
+            <a
+              href={route('reports.download', {
+                ids: filteredIds
+              })}
+            >
               <Button type="button">
                 <DownloadIcon className="w-5 h-5" />
                 Unduh
@@ -110,6 +142,7 @@ export default function ReportIndexPage({
           name="reports"
           searchParam="subject"
           pageSizeOptions={[50, 100, 200, 500]}
+          setFilteredData={setFilteredData}
         />
       </div>
     </Authenticated>

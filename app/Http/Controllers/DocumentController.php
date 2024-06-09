@@ -50,8 +50,6 @@ class DocumentController extends Controller
       ];
     })->toArray();
 
-
-
     return Inertia::render('Documents/Index', [
       'documents' => $documents,
       'doc_type' => $doc_type,
@@ -383,8 +381,6 @@ class DocumentController extends Controller
     $writer->save($filePath);
 
     return response()->download($filePath)->deleteFileAfterSend(true);
-    // return response()->json(['name' => $fileName]);
-    // return redirect()->route('documents.file.download', ['name' => $fileName]);
   }
 
   public function download_template()
