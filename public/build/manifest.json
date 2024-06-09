@@ -26,16 +26,12 @@
   "_GuestLayout-BAfn3tHo.js": {
     "file": "assets/GuestLayout-BAfn3tHo.js",
     "name": "GuestLayout",
-    "imports": [
-      "resources/js/app.tsx"
-    ]
+    "imports": ["resources/js/app.tsx"]
   },
   "_InputError-Dt6x5YJM.js": {
     "file": "assets/InputError-Dt6x5YJM.js",
     "name": "InputError",
-    "imports": [
-      "resources/js/app.tsx"
-    ]
+    "imports": ["resources/js/app.tsx"]
   },
   "_alert-dialog-zleDPHtu.js": {
     "file": "assets/alert-dialog-zleDPHtu.js",
@@ -50,17 +46,12 @@
   "_button-DA6EFk0Z.js": {
     "file": "assets/button-DA6EFk0Z.js",
     "name": "button",
-    "imports": [
-      "resources/js/app.tsx"
-    ]
+    "imports": ["resources/js/app.tsx"]
   },
   "_card-6APjvXbi.js": {
     "file": "assets/card-6APjvXbi.js",
     "name": "card",
-    "imports": [
-      "resources/js/app.tsx",
-      "_button-DA6EFk0Z.js"
-    ]
+    "imports": ["resources/js/app.tsx", "_button-DA6EFk0Z.js"]
   },
   "_checkbox-Dp_S_mK4.js": {
     "file": "assets/checkbox-Dp_S_mK4.js",
@@ -99,10 +90,7 @@
   "_index-BlY-2Gi1.js": {
     "file": "assets/index-BlY-2Gi1.js",
     "name": "index",
-    "imports": [
-      "_button-DA6EFk0Z.js",
-      "resources/js/app.tsx"
-    ]
+    "imports": ["_button-DA6EFk0Z.js", "resources/js/app.tsx"]
   },
   "_index-D5L90L_b.js": {
     "file": "assets/index-D5L90L_b.js",
@@ -116,10 +104,7 @@
   "_input-Bfv9INNM.js": {
     "file": "assets/input-Bfv9INNM.js",
     "name": "input",
-    "imports": [
-      "resources/js/app.tsx",
-      "_button-DA6EFk0Z.js"
-    ]
+    "imports": ["resources/js/app.tsx", "_button-DA6EFk0Z.js"]
   },
   "_label-CjrPlQlb.js": {
     "file": "assets/label-CjrPlQlb.js",
@@ -573,8 +558,6 @@
       "resources/js/Pages/Profile/Partials/UpdateProfileInformationForm.tsx",
       "resources/js/Pages/Reports/Index.tsx"
     ],
-    "css": [
-      "assets/app-B4BqWf2o.css"
-    ]
+    "css": ["assets/app-B4BqWf2o.css"]
   }
 }

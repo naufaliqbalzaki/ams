@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DownloadReportRequest;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -19,12 +20,15 @@ class ReportController extends Controller
       ->groupBy('subject')
       ->get();
 
-
-
-
     foreach ($subjects as $subject) {
       $subject->verification_date = DB::table('documents')
         ->select('verification_date')
+        ->where('subject', $subject->subject)
+        ->orderBy('verification_date', 'asc')
+        ->get();
+
+      $subject->id = DB::table('documents')
+        ->select('id')
         ->where('subject', $subject->subject)
         ->orderBy('verification_date', 'asc')
         ->get();
@@ -36,12 +40,27 @@ class ReportController extends Controller
     ]);
   }
 
-  public function download()
+  public function download(DownloadReportRequest $request)
   {
-    $subjects = DB::table('documents')
-      ->select('subject', DB::raw('count(corrective_action) as approved_total'), DB::raw('count(next_action) as corrective_total'))
-      ->groupBy('subject')
-      ->get();
+    // $subjects = DB::table('documents')
+    //   ->select('subject', DB::raw('count(corrective_action) as approved_total'), DB::raw('count(next_action) as corrective_total'))
+    //   ->groupBy('subject')
+    //   ->get();
+
+    $ids = $request->input('ids');
+
+    if (empty($ids)) {
+      $subjects = DB::table('documents')
+        ->select('subject', DB::raw('count(corrective_action) as approved_total'), DB::raw('count(next_action) as corrective_total'))
+        ->groupBy('subject')
+        ->get();
+    } else {
+      $subjects = DB::table('documents')
+        ->select('subject', DB::raw('count(corrective_action) as approved_total'), DB::raw('count(next_action) as corrective_total'))
+        ->whereIn('id', $ids)
+        ->groupBy('subject')
+        ->get();
+    }
 
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
