@@ -70,7 +70,7 @@ export default function Authenticated({
                         href="#"
                         active={route().current('documents.*')}
                       >
-                        Surat
+                        Kantor
                       </NavLink>
                       <ChevronRightIcon
                         className={cn(
@@ -91,7 +91,7 @@ export default function Authenticated({
                         })}
                         className="w-full"
                       >
-                        Pusat
+                        MPP Pusat
                       </NavLink>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
@@ -104,7 +104,7 @@ export default function Authenticated({
                         })}
                         className="w-full"
                       >
-                        Timur
+                        UPTSA Timur
                       </NavLink>
                     </DropdownMenuItem>
                   </DropdownMenuContent>

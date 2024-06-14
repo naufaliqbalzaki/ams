@@ -49,7 +49,7 @@ class BackupController extends Controller
     if (!file_exists(storage_path() . "/db-backup")) {
       mkdir(storage_path() . "/db-backup", 0777, true);
     }
-    $command = "mysqldump -u " . env('DB_USERNAME') . " -p " . env('DB_DATABASE') . " --password=" . env('DB_PASSWORD')    . " > " . $path;
+    $command = "C:\\xampp\\mysql\\bin\\mysqldump.exe -u " . env('DB_USERNAME') . " -p " . env('DB_DATABASE') . " --password=" . env('DB_PASSWORD')    . " > " . $path;
     exec($command);
     return redirect()->route('backups.index')->with('success', 'Backup database berhasil dibuat');
   }

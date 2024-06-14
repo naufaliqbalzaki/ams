@@ -16,7 +16,7 @@ class ReportController extends Controller
   public function index()
   {
     $subjects = DB::table('documents')
-      ->select('subject', DB::raw('count(corrective_action) as approved_total'), DB::raw('count(next_action) as corrective_total'))
+      ->select('subject', DB::raw('count(next_action) as approved_total'), DB::raw('count(corrective_action) as corrective_total'))
       ->groupBy('subject')
       ->get();
 
@@ -43,7 +43,7 @@ class ReportController extends Controller
   public function download(DownloadReportRequest $request)
   {
     // $subjects = DB::table('documents')
-    //   ->select('subject', DB::raw('count(corrective_action) as approved_total'), DB::raw('count(next_action) as corrective_total'))
+    //   ->select('subject', DB::raw('count(next_action) as approved_total'), DB::raw('count(corrective_action) as corrective_total'))
     //   ->groupBy('subject')
     //   ->get();
 
@@ -51,12 +51,12 @@ class ReportController extends Controller
 
     if (empty($ids)) {
       $subjects = DB::table('documents')
-        ->select('subject', DB::raw('count(corrective_action) as approved_total'), DB::raw('count(next_action) as corrective_total'))
+        ->select('subject', DB::raw('count(next_action) as approved_total'), DB::raw('count(corrective_action) as corrective_total'))
         ->groupBy('subject')
         ->get();
     } else {
       $subjects = DB::table('documents')
-        ->select('subject', DB::raw('count(corrective_action) as approved_total'), DB::raw('count(next_action) as corrective_total'))
+        ->select('subject', DB::raw('count(next_action) as approved_total'), DB::raw('count(corrective_action) as corrective_total'))
         ->whereIn('id', $ids)
         ->groupBy('subject')
         ->get();

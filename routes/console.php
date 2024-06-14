@@ -19,8 +19,8 @@ Schedule::call(function () {
   $path = storage_path() .  "/db-backup/" . $filename;
 
 
-  $command = "mysqldump -u " . env('DB_USERNAME') . " -p " . env('DB_DATABASE') . " --password=" . env('DB_PASSWORD')    . " > " . $path;
+  $command = "C:\\xampp\\mysql\\bin\\mysqldump.exe -u " . env('DB_USERNAME') . " -p " . env('DB_DATABASE') . " --password=" . env('DB_PASSWORD')    . " > " . $path;
 
   exec($command);
   Log::channel('backup')->info('Backup created: ' . $filename);
-})->everySecond();
+})->monthly();

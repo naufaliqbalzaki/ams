@@ -70,8 +70,8 @@ function generateAllColumn({
       ),
       cell(props) {
         const text: string = props.getValue()
-        if (text.length > 20) {
-          return text.slice(0, 20) + '...'
+        if (text.length > 50) {
+          return text.slice(0, 50) + '...'
         } else {
           return text
         }
@@ -99,8 +99,8 @@ function generateAllColumn({
       ),
       cell(props) {
         const text: string = props.getValue()
-        if (text.length > 20) {
-          return text.slice(0, 20) + '...'
+        if (text.length > 100) {
+          return text.slice(0, 100) + '...'
         } else {
           return text
         }
@@ -137,6 +137,18 @@ function generateAllColumn({
       }
     },
     {
+      accessorKey: 'corrective_action',
+      meta: 'Koreksi',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Koreksi" style={{ width: '250px' }} className="justify-text" />
+      ),
+      cell: ({ row }) => (
+        <div style={{ width: '250px' }} className="justify-text">
+          {row.original.corrective_action} {row.original.next_action}
+        </div>
+      )
+    },
+    {
       accessorKey: 'petugas',
       meta: 'Petugas',
       header: ({ column }) => (
@@ -148,8 +160,8 @@ function generateAllColumn({
           return (
             <div className="flex items-center justify-center">-</div>
           )
-        } else if (text.length > 20) {
-          return text.slice(0, 20) + '...'
+        } else if (text.length > 25) {
+          return text.slice(0, 25) + '...'
         } else {
           return text
         }
@@ -299,7 +311,7 @@ export default function DocumentsPage({
       header={
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-            Surat Masuk
+            Berkas Masuk
             {type}
           </h2>
           <div className="flex items-center gap-2">
@@ -334,7 +346,7 @@ export default function DocumentsPage({
         </div>
       }
     >
-      <Head title={`Surat Masuk ${type}`} />
+      <Head title={`Berkas Masuk ${type}`} />
 
       <div className="px-8 pb-8 mx-auto max-w-[1728px]">
         <Tabs defaultValue="all">
